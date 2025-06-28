@@ -1,5 +1,5 @@
 ---
-title: "CS 184, Summer 2025"
+title: "Reinforcement Learning"
 author: "Nicholas Lyu"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
