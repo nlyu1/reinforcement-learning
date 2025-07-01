@@ -1,0 +1,55 @@
+# RL and LLMs
+
+This section explores reward modeling and optimization methods which are widely applicable to LLMs. The theme is the joint task of **modeling rewards** and **optimizing for the reward**: 
+
+1. 
+
+## Preference-based reward modeling {#rewardPreference -} 
+
+:::{.definition #bradleyTerry name="Bradley-Terry model"}
+Consider $K$ actions $b_1, \dots, b_k$. Assume that pairwise preferences are made noisily according to 
+\[ 
+    P(b_j \succ b_k) 
+    = \df{e^{r(b_j)}}{e^{r(b_k)} + e^{r(b_j)}} = \sigma[r(b_j) - r(b_k)]
+\] 
+In short, preferences are encoded by additive logits given by $r$; note that this model is transitive. 
+:::
+
+:::{.definition name="winners"}
+A choice $b_j$ is: 
+
+1. **Condorcet** winner if $P(b_j \succ b_{\forall k\neq j}) > 0.5$. 
+2. **Copeland** winner if it has the highest number of pairwise victories. 
+3. **Borda** winner if it maximizes the expected score (heaviside step function). s
+:::
+
+:::{.definition #hfModel name="preference model for trajectories"}
+Assume that the probability that trajectory $\tau^{(1)}$ is preferred over $\tau^{(2)}$ is 
+\[ 
+    P(\tau^{(1)} \succ \tau^{(2)}) = \sigma \left(
+        \sum_j r^{(1)}_t - r^{(2)}_t 
+    \right)
+\] 
+The reward model is trained by maximizing the likelihood of the observed preferences under the preference model. 
+:::
+
+:::{.definition #rlhf name="RLHF"}
+The RLHF pipeline consists of three parts: 
+
+1. Pretraining a large-language model. 
+2. **Supervised Fine-Tuning**: collecting expert demonstrations (prompt, behavior) and finetune the model to $\pi_{\mrm{ref}}$. 
+3. **Reward model training**: sample multiple model outputs for each prompt. Train a reward model $r_\phi(s, a)$ using labeler ranking. 
+4. **PPO**: optimize KL-constrained reward w.r.t. $\pi_\theta$; KL is used to prevent overfitting: 
+\[ 
+    r(s, a) = r_\phi(s, a) - \beta \log \df{\pi_\theta(a\mid s)}{\pi_{\mrm{ref}}(a\mid s)} 
+\] 
+:::
+
+## Direct Preference Optimization {#dpo -}
+
+Recall the RLHF objective, fixing state (input) $s$, the objective maximizes 
+\begin{align}
+    \EV{\tau \sim \rho^\pi} \left[
+        \sum_{t=0}^{H-1} r(s_t, a_t) - \beta D(\pi(\cdot \mid s_t)\| \pi_{\mrm{ref}}(\cdot \mid s_t)) 
+    \right]
+\end{align}

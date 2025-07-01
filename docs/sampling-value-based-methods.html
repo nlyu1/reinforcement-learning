@@ -23,7 +23,7 @@
 <meta name="author" content="Nicholas Lyu" />
 
 
-<meta name="date" content="2025-06-30" />
+<meta name="date" content="2025-07-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -118,12 +118,18 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="" data-path="policy-methods.html"><a href="policy-methods.html#ppo"><i class="fa fa-check"></i>Off-policy, conservative updates</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="imitation-learning.html"><a href="imitation-learning.html"><i class="fa fa-check"></i><b>4</b> Imitation Learning</a>
+<li class="chapter" data-level="4" data-path="inverse-rl.html"><a href="inverse-rl.html"><i class="fa fa-check"></i><b>4</b> Inverse RL</a>
 <ul>
-<li class="chapter" data-level="" data-path="imitation-learning.html"><a href="imitation-learning.html#imlEasy"><i class="fa fa-check"></i>Zeroth-order approaches</a></li>
-<li class="chapter" data-level="" data-path="imitation-learning.html"><a href="imitation-learning.html#rewardShaping"><i class="fa fa-check"></i>Reward shaping</a></li>
-<li class="chapter" data-level="" data-path="imitation-learning.html"><a href="imitation-learning.html#iRL"><i class="fa fa-check"></i>Inverse RL</a></li>
-<li class="chapter" data-level="" data-path="imitation-learning.html"><a href="imitation-learning.html#maxEntropyiRL"><i class="fa fa-check"></i>Max-entropy IRL</a></li>
+<li class="chapter" data-level="" data-path="inverse-rl.html"><a href="inverse-rl.html#imlEasy"><i class="fa fa-check"></i>Zeroth-order approaches</a></li>
+<li class="chapter" data-level="" data-path="inverse-rl.html"><a href="inverse-rl.html#rewardShaping"><i class="fa fa-check"></i>Reward shaping</a></li>
+<li class="chapter" data-level="" data-path="inverse-rl.html"><a href="inverse-rl.html#iRL"><i class="fa fa-check"></i>Classical inverse RL</a></li>
+<li class="chapter" data-level="" data-path="inverse-rl.html"><a href="inverse-rl.html#maxEntropyiRL"><i class="fa fa-check"></i>Max-entropy IRL</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="rl-and-llms.html"><a href="rl-and-llms.html"><i class="fa fa-check"></i><b>5</b> RL and LLMs</a>
+<ul>
+<li class="chapter" data-level="" data-path="rl-and-llms.html"><a href="rl-and-llms.html#rewardPreference"><i class="fa fa-check"></i>Preference-based reward modeling</a></li>
+<li class="chapter" data-level="" data-path="rl-and-llms.html"><a href="rl-and-llms.html#rlHF"><i class="fa fa-check"></i>RLHF</a></li>
+<li class="chapter" data-level="" data-path="rl-and-llms.html"><a href="rl-and-llms.html#dpo"><i class="fa fa-check"></i>Direct Preference Optimization</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="bibliography.html"><a href="bibliography.html"><i class="fa fa-check"></i>Bibliography</a></li>
 </ul>
@@ -168,7 +174,7 @@ div.csl-indent {
 <li><em>Temporal-Difference policy iteration</em> (SARSA) = (policy evaluation using TD) + policy iteration: online &amp; on-policy.</li>
 <li><em><span class="math inline">\(Q\)</span>-learning</em> <a href="sampling-value-based-methods.html#def:qLearning">2.9</a> = action-value iteration.</li>
 </ul></li>
-<li><span class="math inline">\(Q\)</span>-learning is fundamentally a <strong>action-value iteration</strong> engine; online versions (@ref{prp:qVariants}) merely serve to obtain more relevant samples.</li>
+<li><span class="math inline">\(Q\)</span>-learning is fundamentally a <strong>action-value iteration</strong> engine; online versions (<a href="sampling-value-based-methods.html#prp:qVariants">2.1</a>) merely serve to obtain more relevant samples.</li>
 <li>Deep <span class="math inline">\(Q\)</span>-learning = (<span class="math inline">\(Q\)</span>-function approximation) + (sampling approximation) + (incremental online iteration to obtain relevant samples) + (action-value iteration).
 <ul>
 <li>Target network &amp; experience replay buffers.</li>

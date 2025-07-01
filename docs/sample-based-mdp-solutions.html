@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>2 Approximate Methods | CS 184, Summer 2025</title>
-  <meta name="description" content="2 Approximate Methods | CS 184, Summer 2025" />
+  <title>2 Sample-based MDP solutions | Reinforcement Learning</title>
+  <meta name="description" content="2 Sample-based MDP solutions | Reinforcement Learning" />
   <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="2 Approximate Methods | CS 184, Summer 2025" />
+  <meta property="og:title" content="2 Sample-based MDP solutions | Reinforcement Learning" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="2 Approximate Methods | CS 184, Summer 2025" />
+  <meta name="twitter:title" content="2 Sample-based MDP solutions | Reinforcement Learning" />
   
   
   
@@ -23,7 +23,7 @@
 <meta name="author" content="Nicholas Lyu" />
 
 
-<meta name="date" content="2025-06-26" />
+<meta name="date" content="2025-07-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="mdp.html"/>
-<link rel="next" href="gradient-methods.html"/>
+<link rel="next" href="policy-methods.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -59,6 +59,28 @@
   
   div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 </style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
 
 </head>
 
@@ -81,14 +103,32 @@
 <li class="chapter" data-level="" data-path="mdp.html"><a href="mdp.html#policyEval"><i class="fa fa-check"></i>Policy evaluation</a></li>
 <li class="chapter" data-level="" data-path="mdp.html"><a href="mdp.html#optimalSolutions"><i class="fa fa-check"></i>Optimal solutions</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="approximate-methods.html"><a href="approximate-methods.html"><i class="fa fa-check"></i><b>2</b> Approximate Methods</a>
+<li class="chapter" data-level="2" data-path="sample-based-mdp-solutions.html"><a href="sample-based-mdp-solutions.html"><i class="fa fa-check"></i><b>2</b> Sample-based MDP solutions</a>
 <ul>
-<li class="chapter" data-level="" data-path="approximate-methods.html"><a href="approximate-methods.html#polEval"><i class="fa fa-check"></i>Model-free policy evaluation</a></li>
-<li class="chapter" data-level="" data-path="approximate-methods.html"><a href="approximate-methods.html#modelFreeControl"><i class="fa fa-check"></i>Model free control</a></li>
+<li class="chapter" data-level="" data-path="sample-based-mdp-solutions.html"><a href="sample-based-mdp-solutions.html#polEval"><i class="fa fa-check"></i>Model-free policy evaluation</a></li>
+<li class="chapter" data-level="" data-path="sample-based-mdp-solutions.html"><a href="sample-based-mdp-solutions.html#modelFreeControl"><i class="fa fa-check"></i>Model free control</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="gradient-methods.html"><a href="gradient-methods.html"><i class="fa fa-check"></i><b>3</b> Gradient Methods</a>
+<li class="chapter" data-level="3" data-path="policy-methods.html"><a href="policy-methods.html"><i class="fa fa-check"></i><b>3</b> Policy Methods</a>
 <ul>
-<li class="chapter" data-level="" data-path="gradient-methods.html"><a href="gradient-methods.html#pg"><i class="fa fa-check"></i>Policy gradient</a></li>
+<li class="chapter" data-level="" data-path="policy-methods.html"><a href="policy-methods.html#pg"><i class="fa fa-check"></i>Vanilla policy gradient</a></li>
+<li class="chapter" data-level="" data-path="policy-methods.html"><a href="policy-methods.html#pgReduceVar"><i class="fa fa-check"></i>Reducing variance</a>
+<ul>
+<li class="chapter" data-level="" data-path="policy-methods.html"><a href="policy-methods.html#pgBaseline"><i class="fa fa-check"></i>Baseline</a></li>
+<li class="chapter" data-level="" data-path="policy-methods.html"><a href="policy-methods.html#advEstimate"><i class="fa fa-check"></i>Generalized Advantage Estimation</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="policy-methods.html"><a href="policy-methods.html#ppo"><i class="fa fa-check"></i>Off-policy, conservative updates</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="inverse-rl.html"><a href="inverse-rl.html"><i class="fa fa-check"></i><b>4</b> Inverse RL</a>
+<ul>
+<li class="chapter" data-level="" data-path="inverse-rl.html"><a href="inverse-rl.html#imlEasy"><i class="fa fa-check"></i>Zeroth-order approaches</a></li>
+<li class="chapter" data-level="" data-path="inverse-rl.html"><a href="inverse-rl.html#rewardShaping"><i class="fa fa-check"></i>Reward shaping</a></li>
+<li class="chapter" data-level="" data-path="inverse-rl.html"><a href="inverse-rl.html#iRL"><i class="fa fa-check"></i>Classical inverse RL</a></li>
+<li class="chapter" data-level="" data-path="inverse-rl.html"><a href="inverse-rl.html#maxEntropyiRL"><i class="fa fa-check"></i>Max-entropy IRL</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="rl-and-llms.html"><a href="rl-and-llms.html"><i class="fa fa-check"></i><b>5</b> RL and LLMs</a>
+<ul>
+<li class="chapter" data-level="" data-path="rl-and-llms.html"><a href="rl-and-llms.html#rewardPreference"><i class="fa fa-check"></i>Preference-based reward modeling</a></li>
+<li class="chapter" data-level="" data-path="rl-and-llms.html"><a href="rl-and-llms.html#dpo"><i class="fa fa-check"></i>Direct Preference Optimization</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="bibliography.html"><a href="bibliography.html"><i class="fa fa-check"></i>Bibliography</a></li>
 </ul>
@@ -100,7 +140,7 @@
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">CS 184, Summer 2025</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Reinforcement Learning</a>
           </h1>
         </div>
 
@@ -108,8 +148,8 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="approximate-methods" class="section level1 hasAnchor" number="2">
-<h1><span class="header-section-number">2</span> Approximate Methods<a href="approximate-methods.html#approximate-methods" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="sample-based-mdp-solutions" class="section level1 hasAnchor" number="2">
+<h1><span class="header-section-number">2</span> Sample-based MDP solutions<a href="sample-based-mdp-solutions.html#sample-based-mdp-solutions" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>This section explores RL solutions when the environment dynamics <span class="math inline">\(P(\cdot\mid s, a)\)</span> and rewards are <strong>not known</strong>. This is also known as the <strong>model-free</strong> regime.</p>
 <ol style="list-style-type: decimal">
 <li>We overcome the model-free constraint by using <strong>sampling</strong> (and consistent estimations) to replace expectations.
@@ -122,7 +162,7 @@
 <li><strong>Temporal Difference (TD)</strong>: low variance, need Markov conditions; converges asymptotically (when run against static data) to DP solution on empirical distribution of data.</li>
 <li>TD in asymptotic batched setting = analytic solution of policy evaluation under empirical distribution.</li>
 </ol></li>
-<li>Difference between on-policy v. off-policy (definition <a href="approximate-methods.html#def:policyStatus">2.4</a>), and online v. offline methods (definition <a href="approximate-methods.html#def:onlineStatus">2.5</a>.
+<li>Difference between on-policy v. off-policy (definition <a href="sample-based-mdp-solutions.html#def:policyStatus">2.4</a>), and online v. offline methods (definition <a href="sample-based-mdp-solutions.html#def:onlineStatus">2.5</a>.
 <ul>
 <li>Action-value iteration is offline since we do not need to sample-approximate any <span class="math inline">\(\mathop{\mathbb{E}}\limits_{a\sim \pi(s)}\)</span>.</li>
 <li>Policy-iteration is online since it involves policy evaluation.</li>
@@ -131,16 +171,16 @@
 <ul>
 <li><em>Monte-Carlo policy iteration</em> = (policy evaluation using MC) + policy iteration: online &amp; on-policy.</li>
 <li><em>Temporal-Difference policy iteration</em> (SARSA) = (policy evaluation using TD) + policy iteration: online &amp; on-policy.</li>
-<li><em><span class="math inline">\(Q\)</span>-learning</em> <a href="approximate-methods.html#def:qLearning">2.9</a> = action-value iteration.</li>
+<li><em><span class="math inline">\(Q\)</span>-learning</em> <a href="sample-based-mdp-solutions.html#def:qLearning">2.9</a> = action-value iteration.</li>
 </ul></li>
-<li><span class="math inline">\(Q\)</span>-learning is fundamentally a <strong>action-value iteration</strong> engine; online versions (@ref{prp:qVariants}) merely serve to obtain more relevant samples.</li>
+<li><span class="math inline">\(Q\)</span>-learning is fundamentally a <strong>action-value iteration</strong> engine; online versions (<a href="sample-based-mdp-solutions.html#prp:qVariants">2.1</a>) merely serve to obtain more relevant samples.</li>
 <li>Deep <span class="math inline">\(Q\)</span>-learning = (<span class="math inline">\(Q\)</span>-function approximation) + (sampling approximation) + (incremental online iteration to obtain relevant samples) + (action-value iteration).
 <ul>
 <li>Target network &amp; experience replay buffers.</li>
 </ul></li>
 </ol>
 <div id="polEval" class="section level2 unnumbered hasAnchor">
-<h2>Model-free policy evaluation<a href="approximate-methods.html#polEval" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<h2>Model-free policy evaluation<a href="sample-based-mdp-solutions.html#polEval" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>We first consider the policy evaluation problem <span class="math inline">\(\pi \mapsto Q^\pi\)</span>. We are more interested in <span class="math inline">\(Q^\pi\)</span> since <span class="math inline">\(\mathrm{argmax}\)</span> directly yields a greedy policy; in contrast, there’s no way to build a greedy policy from <span class="math inline">\(V^\pi\)</span> in the model-free regime.</p>
 <div class="definition">
 <p><span id="def:polEvalCriteria" class="definition"><strong>Definition 2.1  (evaluation criteria) </strong></span>We want our evaluation (estimation) protocol to be:</p>
@@ -231,7 +271,7 @@ One can also imagine “unrolling” the consistency relations twice (or more) b
 <p>To see why, recall that TD with convergent <span class="math inline">\(\alpha\)</span> is equivalent to iterated convergence using the consistency operator. Then running TD on batched data is equivalent to iterated policy evaluation on the empirical (MLE) distribution of the environment. In the example above, the DP structure “baked in” to the TD algorithm empowered more data-efficient results.</p>
 </div>
 <div id="modelFreeControl" class="section level2 unnumbered hasAnchor">
-<h2>Model free control<a href="approximate-methods.html#modelFreeControl" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<h2>Model free control<a href="sample-based-mdp-solutions.html#modelFreeControl" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="definition">
 <p><span id="def:policyStatus" class="definition"><strong>Definition 2.4  (on (off)-policy algorithms) </strong></span>A learning algorithm is <strong>on policy</strong> if its update rule depends on samples using the current policy.</p>
 </div>
@@ -242,7 +282,7 @@ One can also imagine “unrolling” the consistency relations twice (or more) b
 <li>Online (offline) asks the question: does this interact with the environment during learning?</li>
 <li>On-policy asks the question: must update depend on data computed using the latest policy?</li>
 </ol>
-<p>In the <a href="approximate-methods.html#polEval">previous section</a>, we have seen how Monte-Carlo and TD can help evaluate policies; we have also seen how policy iteration <a href="mdp.html#def:infPolicyIter">1.10</a> implies that <span style="color:blue"> policy evaluation + policy improvement (acting greedily w.r.t. evaluation) iterates to solve the control problem </u>.</p>
+<p>In the <a href="sample-based-mdp-solutions.html#polEval">previous section</a>, we have seen how Monte-Carlo and TD can help evaluate policies; we have also seen how policy iteration <a href="mdp.html#def:infPolicyIter">1.10</a> implies that <span style="color:blue"> policy evaluation + policy improvement (acting greedily w.r.t. evaluation) iterates to solve the control problem </u>.</p>
 <div class="definition">
 <p><span id="def:MCPI" class="definition"><strong>Definition 2.6  (Monte-Carlo policy iteration) </strong></span>MCPI combines <span class="math inline">\(Q\)</span>-evaluation using MC with policy iteration; it is <strong>online, on-policy</strong>. Algorithm:</p>
 <ol style="list-style-type: decimal">
@@ -328,7 +368,7 @@ One can also imagine “unrolling” the consistency relations twice (or more) b
         </div>
       </div>
 <a href="mdp.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="gradient-methods.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="policy-methods.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

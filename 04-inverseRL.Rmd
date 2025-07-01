@@ -1,0 +1,273 @@
+# Inverse RL 
+
+In this section, we relax the assumption that the reward model is known. The task of inverse RL is to obtain good policy from expert demonstrations. 
+
+1. Naive approach: **behavior cloning** i.e. [naively supervision](#imlEasy) based on the expert's behavior. Problems: 
+    a. i.i.d. assumption violated due to state-distribution shifts. 
+    b. Can never out-perform the expert. 
+2. Alternative approach: infer the reward, then optimize w.r.t. reward. 
+    - Bottleneck becomes (being able to best infer reward from preferences) + (optimizing given reward). 
+    - <u>Capable of out-performing expert, given accurate reward modeling </u> (!!!) 
+2. **Reward shaping theorem** \@ref(thm:rewardShapingTheorem): potential-based transformations $r(s, a, s')\mapsto r(s, a, s') + \gamma \Phi(s') - \Phi(s)$ is the only symmetry class <u>under all possible dynamics and baseline rewards</u>
+    - Main idea: the transformation effects $V(s) \mapsto V(s) + \Phi(s)$ so the optimal policy remains invariant. 
+    - Fixing $P$ and baseline $r$, there can be more symmetry.
+3. Classical approach \@ref(def:classicalIRL) elucidates **adversarial** iteration between: 
+    - Maximizing reward gap between expert reward and that of the current policy. 
+    - Maximizing policy reward w.r.t. estimate. 
+4. Another approach to the reward identifiably problem is to use the principle of maximum entropy (algorithm \@ref(def:maxEntIRLAlg)). Assuming knowledge of the dynamics model $P$, every policy $\pi_\theta$ induces a distribution $\rho^{\pi_\theta}$. Each reward model $r_\phi$ induces an optimal policy $\pi^*(r_\phi)$, which in turn induces an optimal distribution $\rho^*_{r_\phi}$ over trajectories.
+    a. <span style="color:blue"> We look for a reward model **whose optimal policy $\pi_\phi$ induces a trajectory distribution** satisfying (theorem \@ref(thm:maxEntReduction)): 
+        - Reward-compatible with empirical expert trajectory. 
+        - Has maximal entropy. </span>
+    b. We break this optimization into optimizing $r_\phi$ over (maximum entropy given $r_\phi$, and reward-compatible with empirical data); the inner optimizer is a Boltzmann distribution. 
+    c. It turns out that this optimization is equivalent to looking for a reward model under whose Boltzmann distribution the empirical expert trajectories are MLE: **key theorem \@ref(thm:maxEntReduction)** 
+        - Additionally, the gradient looks exactly like maximizing the separation between the empirically expected reward and the expected reward under the Boltzmann distribution, echoing the classical IRL construction \@ref(def:classicalIRL). 
+        - Critical assumption: the parameterization $r_\phi$ has linear degree of freedom. 
+
+## Zeroth-order approaches {#imlEasy -}
+
+:::{.definition #imlSetup name="problem setup"}
+In the imitation setup, we have access to: 
+
+- State and action spaces, transition model. 
+- **No** reward model $R$. 
+- Set of one or more teacher's demonstrations $(s_{jt}, a_{jt})$. 
+
+Interesting tasks include: 
+
+- **Behavior cloning**: how to reproduce the teacher's behavior?
+- **Inverse RL**: how to recover $R$?
+- **Apprenticeship learning via inverse RL**: use $R$ to generate a good policy. 
+:::
+
+:::{.definition #demoiml name="learning from demonstrations"}
+Given demonstration trajectories $(s_{tj}, a_{tj})$ , train a policy with supervised learning. 
+:::
+
+One problem with behavior cloning: compounding errors. Supervised learning assumes $s_t\sim D_{\pi^*}$ i.i.d, while erroneous policies induce state distribution shift $s_t\sim D_{\pi_\theta}$ during test. 
+
+A simple solution to this is called DAGGER, which iteratively asks the expert to provide feedback on the states visited by the policy. 
+
+## Reward shaping {#rewardShaping -}
+
+One immediate problem with learning the reward model is that the mapping $(R\to \pi^*)$ is not unique. One solution to this problem is provided in [@ng1999policy]. In full generality, we consider additive transformations $F(s, a, s')$ of the reward function. 
+
+:::{.definition name="potential-based shaping function"}
+A reward shaping function $F:S\times A\times R\to \R$ is a potential-based shaping function if there exists a real-valued function $\Phi:S\to \R$ suhch that $\forall s\in S-\{s_0\}$, 
+\[ 
+    F(s, a, s') = \gamma \Phi(s') - \Phi(s)
+\] 
+where $S-\{s_0\}=S$ if $\gamma<1$. 
+:::
+
+<div style="color:blue">
+Two remarks in order about the following theorem: 
+
+1. It includes scalar transformations $r\mapsto \alpha\, r$ as a special case. 
+2. It uniquely identifies the symmetry group for $r\mapsto r+F$, <u>assuming that transition $P$ can be picked arbitrarily under picking the gauge</u>. Fixing the transition $P$ and baseline $r$ a priori, there might be a larger class of symmetries. 
+</div> 
+
+:::{.theorem #rewardShapingTheorem name="reward shaping theorem"}
+The reward transformation $r\mapsto r+F$ preserves the optimal policy <span style="color:blue">for all transitions $P$ and baseline reward $r$</span> iff $F$ is a potential-based shaping function. In other words: 
+
+- **Sufficiency**: if $F$ is potential-based, then every optimal policy under $r$ is an optimal policy in $r'=r+F$. 
+- **Necessity**: if $F$ is not potential-based, then there exists transition models $P$ and reward function $R$ such that no optimal policy under $r'$ is optimal under $r$. 
+
+Under this transformation, the value functions transform as 
+\[ 
+    Q(s, a)\mapsto Q(s, a) - \Phi(s), \quad V(s) \mapsto V(s) - \Phi(s) 
+\] 
+:::
+
+<details>
+<summary>Sufficiency: pick a transformation affecting $V^*\mapsto V^*+\pi$ which is independent of the policy</summary>
+</details>
+
+Let $M, M'$ denote MDPs under $r, r'=r+F$ respectively. Recall for $M^*$ the Bellman optimality equations: 
+\[ 
+    Q^*_M(s, a) 
+    = \EV{s'\sim P(\cdot\mid s, a)}\left[
+        r(s, a, s') + \gamma \max_{a'\sim A} Q^*M(s', a') 
+    \right]
+\] 
+Subtract $\Phi(s)$ from both sides: 
+\begin{align}
+    Q^*_M(s, a) - \Phi(s) 
+    = \EV{s'\sim P(\cdot\mid s, a)}\left[
+        r(s, a, s') + \gamma\, \Phi(s') - \Phi(s) + \gamma \max_{a'\sim A} \left[
+            Q^*M(s', a') - \Phi(s) 
+        \right]
+    \right]
+\end{align}
+But this is exactly the Bellman optimality equation for $M'$ with solution 
+\[ 
+    Q^*_{M'}(s, a) = Q^*_M(s, a) - \Phi(s)
+\] 
+Then any optimal policy for $M$ satisfying 
+\[ 
+    \pi^* = \argmax{\pi} V^*_M(s_0) =  \argmax{\pi} V^*_M(s_0) - \Phi(s_0) = \argmax{\pi} V^*_{M'}(s_0) - \Phi(s_0)
+\] 
+is also optimal for $M'$. 
+
+## Classical inverse RL {#iRL -}
+
+:::{.definition #linFeatureAssumption name="linear features"}
+Assuming that we have a feature function $x:\mca S\times \mca A\to \R^n$ such that the reward is linear in features: 
+\[ 
+    r(s, a) = w^T x(s, a), \quad w\in \R^n\text{   and  } \|w_\infty\|_\leq 1 
+\] 
+Fixing features a priori, the goal of reward learning will be to identify the weight vector $w$ given a set of demonstrations. 
+:::
+
+:::{.proposition #featureMatchingLearning name="optimal-policy learning ≈ feature matching"}
+Given features $x$ satisfying assumptions \@ref(def:linFeatureAssumption) and policy $\pi$, define the **expected discounted feature** $\mu_\pi: \R^n$ by 
+\[ 
+    \mu_\pi =  \EV{\pi} \left[
+        \sum_{t=0}^\infty \gamma^t x(s_t, a_t)\mid s_0 
+    \right]
+\] 
+Assuming that $r=w^Tx$, then 
+\[ 
+    \|\mu_\pi - \mu_{\pi^*}\|_1\leq \epsilon \implies V^*(s_0) - V^\pi(s_0) \leq \epsilon
+\] 
+:::
+
+Unrolling the linear reward function, $V^\pi$ can be rewritten as 
+\[ 
+    V^\pi(s_0) = \EV{\pi} \left[
+        \sum_{t=0}^\infty \gamma^t w^T r(s_t, a_t)\mid s_0 
+    \right]
+    = w^T \mu_\pi 
+\] 
+Using Holder's inequality with $\|w\|_\infty \leq 1$, we obtain 
+\[ 
+    \|\mu_\pi - \mu_{\pi^*}\|_1\leq \epsilon \implies 
+    |w^T\mu_\pi - w^T \mu_{\pi^*}| \leq \epsilon
+\] 
+
+:::{.definition #classicalIRL name="classical IRL algorithm"}
+Assuming $r=w^Tx$ for features $x$ given a priori: 
+
+1. Compute the optimal demonstration's discounted mean features $\mu_{\pi^*}$ from demonstration (proposition \@ref(prp:featureMatchingLearning)). 
+2. Since the optimal policy satisfies $w^T \mu_{\pi^*} \geq w^T \mu_{\pi}$, initialize $\pi$ and repeat until convergence: 
+    - Optimize $w\mapsto \argmax{\|w\|_\infty \leq 1 } w^T \mu_{\pi^*} - w^T \mu_\pi$. 
+    - Iterate $\pi \mapsto \argmax{\pi} w^T \mu_\pi$. 
+:::
+
+## Max-entropy IRL {#maxEntropyiRL -}
+
+We develop the inverse RL framework below assuming the dynamics is known. See [@finn2016guided] for a fitted version. 
+
+:::{.definition #maxEntPrinciple name="principle of max entropy in IRL"}
+Assuming access to the following components: 
+
+1. Environment dynamics $P$.  
+2. Expert empirical distribution $\hat \rho = \frac 1 n \sum 1_{\tau_j}$. 
+
+**Given a reward model $r_\phi$**, the max-entropy trajectory distribution compatible with $r_\phi$ and the expert trajectories is specified by  
+\[ 
+    \rho^*_{r_\phi} = \max_\rho H(\rho) = -\sum_\tau \rho(\tau) \log \rho(\tau) 
+\] 
+subject to the following constraints: 
+
+1. Normalization: $\sum_\tau \rho(\tau) = 1$. 
+2. **Reward-equivalence** let $\hat r_\phi = \df 1 N \sum r_\phi(\tau_j) = \EV{\hat \rho} r_\phi(\tau) \in \R$ denote the expert reward under this reward model: 
+\[ 
+    \EV{\tau \sim \rho}r_\phi(\tau) = \sum_\tau \rho(\tau) \, r_\phi(\tau) = \hat r_\phi
+\] 
+:::
+
+:::{.theorem #maxEntReduction name="max-entropy reduction"}
+Let $B_{r_\phi: \tau \mapsto \R, \lambda\in R}$ denote the Boltzmann distribution 
+\[ 
+    B_{r_\phi, \lambda} = \df{e^{\lambda \, r_\phi(\tau)}}{Z(r_\phi, \lambda)}, \quad Z(r_\phi, \lambda) = \sum_\tau e^{\lambda r_\phi(\tau)}
+\] 
+Further assume that $r_\phi$ has <u>linear degree of freedom</u> i.e. 
+\[
+    \max_{r_\phi} \max_\lambda f(\lambda r_\phi) = \max_{r_\phi} f(r_\phi) 
+\]
+<div style="color:blue">
+Then the $r_\phi$ (maximizing entropy over all distribution $\rho$ which is $r_\phi$-reward compatible with $\hat \rho$) is equal to the one (maximizing likelihood of $\hat \rho$ under Boltzmann distribution parameterized by $r_\phi$): 
+
+\begin{align}
+    \argmax{r_\phi}\left[
+        \max_{\text{distribution }\rho} H(\rho) \quad \text{s.t.  } \EV{\rho} r_\phi(\tau) = \bar r(r_\phi)
+    \right] = \argmax{r_\phi} -D(\hat \rho \| B_{r_\phi, \lambda=1}) 
+\end{align}
+
+The gradient of the RHS w.r.t $\phi$ is 
+\begin{align}
+    \nabla_\phi \df 1 N \sum \log B_{r_\phi, \lambda=1}(\tau_j) 
+    &= \nabla_\phi \left[ 
+        -\log Z_{r_\phi, \lambda=1} + \df 1 N \sum r_\phi(\tau_j) 
+    \right] \\ 
+    &= \EV{\hat \rho}\left[\nabla_\phi r_\phi(\tau)\right] - \EV{B_{r_\phi, \lambda}} \left[\nabla_\phi r_\phi(\tau)\right] 
+\end{align}
+</div> 
+:::
+
+<details>
+<summary>Proof idea: invoke Boltzmann lemma below for LHS. On RHS, expand and apply the linear degree of freedom to write $\argmax{r_\phi}=\argmax{r_\phi}\max_\lambda$; the inner $\max_\lambda$ reduces to the average-reward constraint on $\lambda$</summary>
+
+:::{.lemma name="Boltzmann solution"}
+The constrained maximum 
+\[ 
+    \left[\max_{\text{distribution }\rho} H(\rho) \quad \text{s.t.  } \EV{\rho} r_\phi(\tau) = \bar r(r_\phi)\right]\,\, = \log Z_{r_\phi, \lambda} + \lambda \bar r(r_\phi) 
+\] 
+The distribution achieving the maximum is Boltzmann $\rho^* = B(r_\phi, \lambda)$, where the free parameter $\lambda$ satisfies $\EV{B_{r_\phi, \lambda}} r_\phi(\tau) = \bar r(r_\phi)$. 
+:::
+
+<details>
+<summary>Proof</summary>
+Introducing two Lagrangian multipliers $\lambda, \lambda_p$: the equations $\pd \lambda \mca L=\pd {\lambda_p} \mca L = 0$ enforces the two constraints, respectively: 
+\begin{align}
+    \mca L &= - \sum_\tau \rho(\tau) \log \rho(\tau) - \lambda \left(\bar r(r_\phi) - \sum_\tau \rho(\tau) r_\phi(\tau) \right) + \lambda_p \sum_\tau \rho(\tau) \\ 
+    \pd {\rho(\tau)} \mca L 
+    &= -\log \rho(\tau) + 1 + \lambda r_\phi(\tau) + \lambda_p = 0 \\ 
+    \log \rho(\tau) &= 1 + \lambda r_\phi(\tau) + \lambda_p \implies \rho^*(\tau) \propto e^{\lambda r_\phi(\tau)}
+\end{align}
+Proceding to calculate the entropy of this distribution: 
+\begin{align}
+    H(\rho^*) 
+    &= \sum_\tau \rho^*(\tau) \log \df{Z_{r_\phi, \lambda}}{e^{\lambda\, r_\phi(\tau)}} = \sum_\tau \rho^*(\tau) \left[
+    \log Z - \lambda r_\phi(\tau)
+    \right]  \\ 
+    &= \log Z_{r_\phi, \lambda} + \lambda \EV{\rho^*} r_\phi(\tau) = \log Z_{r_\phi, \lambda} + \lambda \bar r(r_\phi) 
+\end{align}
+</details>
+
+Applying the lemma above, the LHS reduces to 
+\[ 
+    \argmax{r_\phi}\left[
+        Z_{r_\phi, \lambda} + \lambda r(r_\phi) \quad \text{s.t.  } \EV{\tau \sim B_{r_\phi, \lambda}} r_\phi(\tau) = \bar r(r_\phi)
+    \right]
+\] 
+Expand the likelihood extremization on the RHS: 
+\begin{aligned}
+    \argmax{r_\phi} 
+    -D(\hat \rho \| B_{r_\phi, \lambda=1}) 
+    &= \argmax{r_\phi} \df 1 N \sum_\tau \hat \rho(\tau) \log \df{B_{r_\phi, \lambda=1}(\tau)}{\hat \rho(\tau)} \\ 
+    &= \argmax{r_\phi} \df 1 N \sum_j \log B_{r_\phi, \lambda=1}(\tau_j) \\ 
+    &= \argmax{r_\phi} \left(\sum_j \lambda_{=1} r_\phi(\tau_j)\right) + \log Z_{r_\phi, \lambda=1} \\ 
+    &= \argmax{r_\phi} \left[ \lambda_{=1} \bar r(r_\phi) + \log Z_{r_\phi, \lambda=1}\right] 
+\end{aligned}
+Recall that $r_\phi$ has linear degree of freedom, so we can split the $\argmax{r_\phi}$; the inner $\max$ is maximized when $\lambda$ satisfies $\EV{B_{r_\phi, \lambda}}r_\phi(\tau) = \bar r(r_\phi)$ (this can be seen by another application of Lagrange multipliers, or by recognizing the Legendre transform), so the RHS reduces to LHS: 
+\begin{aligned}
+    \argmax{r_\phi} \left[ \lambda_{=1} \bar r(r_\phi) + \log Z_{r_\phi, \lambda}\right]  
+    &= \argmax{r_\phi} \max_\lambda \left[ \lambda \bar r(r_\phi) + \log Z_{r_\phi, \lambda}\right]  \\ 
+    &= \argmax{r_\phi}\left[
+        \log Z_{r_\phi, \lambda} + \lambda r(r_\phi) \quad \text{s.t.  } \EV{\tau \sim B_{r_\phi, \lambda}} r_\phi(\tau) = \bar r(r_\phi)
+    \right]
+\end{aligned}
+</details>
+
+Salient points: 
+
+1. When $r_\phi$ does not have linear degree of freedom, maximizing likelihood of the empirical distribution under $r_\phi$-parameterized Boltzmann distribution **is not** equivalent to maximizing the maximum reward-compatible distribution entropy. 
+2. Given a Boltzmann distribution of trajectories, the maximum-entropy optimal policy is $\pi_\phi(a\mid s) \propto \exp Q^*(s, a)$, where $Q^*$ solves MDP with reward $r_\phi$. 
+
+:::{.definition #maxEntIRLAlg name="max-entropy IRL Algorithm"}
+Given dynamics model $P$ and expert demonstration $\hat \rho \sim \{\hat \tau_j\}$, initialize scale-invariant $r_\phi$ and repeat until convergence: 
+
+1. Given $r_\phi$, use value interation to compute $Q^*(s, a)$. The max-entropy optimal policy is then $\pi_\phi(a\mid s) \propto \exp Q^*(s, a)$.  
+2. Update $\phi$ in the direction of $-\nabla_\phi D(\hat \rho \|B_{r_\phi, \lambda=1}) = \EV{\hat \rho}\left[\nabla_\phi r_\phi(\tau)\right] - \EV{B_{r_\phi, \lambda}} \left[\nabla_\phi r_\phi(\tau)\right]$. 
+:::

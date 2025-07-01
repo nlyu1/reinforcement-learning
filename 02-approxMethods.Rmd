@@ -1,4 +1,4 @@
-# Sampling Value-based Methods
+# Sample-based MDP solutions 
 
 This section explores RL solutions when the environment dynamics $P(\cdot\mid s, a)$ and rewards are **not known**. This is also known as the **model-free** regime. 
 
@@ -15,7 +15,7 @@ This section explores RL solutions when the environment dynamics $P(\cdot\mid s,
     - _Monte-Carlo policy iteration_ = (policy evaluation using MC) + policy iteration: online & on-policy. 
     - _Temporal-Difference policy iteration_ (SARSA) = (policy evaluation using TD) + policy iteration: online & on-policy. 
     - _$Q$-learning_ \@ref(def:qLearning) = action-value iteration. 
-5. $Q$-learning is fundamentally a **action-value iteration** engine; online versions (\@ref{prp:qVariants}) merely serve to obtain more relevant samples. 
+5. $Q$-learning is fundamentally a **action-value iteration** engine; online versions (\@ref(prp:qVariants)) merely serve to obtain more relevant samples. 
 5. Deep $Q$-learning = ($Q$-function approximation) + (sampling approximation) + (incremental online iteration to obtain relevant samples) + (action-value iteration). 
     - Target network & experience replay buffers. 
 
@@ -198,3 +198,5 @@ DQN (Deep Q Networks) build on the online version above with:
 2. To mitigate the non-i.i.d. data, use experience replay buffers. 
 3. To mitigate nonstationary target in the Bellman optimality operator, update the $Q$-target slowly to improve stability. 
     - Intuition: while the Bellman optimality operator is a contraction, using functional approximation might break this property and lead to oscillation / divergence. 
+
+    

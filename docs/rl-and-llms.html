@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Page not found | Reinforcement Learning</title>
-  <meta name="description" content="Page not found | Reinforcement Learning" />
+  <title>5 RL and LLMs | Reinforcement Learning</title>
+  <meta name="description" content="5 RL and LLMs | Reinforcement Learning" />
   <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Page not found | Reinforcement Learning" />
+  <meta property="og:title" content="5 RL and LLMs | Reinforcement Learning" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Page not found | Reinforcement Learning" />
+  <meta name="twitter:title" content="5 RL and LLMs | Reinforcement Learning" />
   
   
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-
+<link rel="prev" href="inverse-rl.html"/>
+<link rel="next" href="bibliography.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -148,19 +148,70 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="page-not-found" class="section level1">
-<h1>Page not found</h1>
-<p>The page you requested cannot be found (perhaps it was moved or renamed).</p>
-<p>You may want to try searching to find the page's new location, or use
-the table of contents to find the page you are looking for.</p>
+<div id="rl-and-llms" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number">5</span> RL and LLMs<a href="rl-and-llms.html#rl-and-llms" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>This section explores reward modeling and optimization methods which are widely applicable to LLMs. The theme is the joint task of <strong>modeling rewards</strong> and <strong>optimizing for the reward</strong>:</p>
+<ol style="list-style-type: decimal">
+<li></li>
+</ol>
+<div id="rewardPreference" class="section level2 unnumbered hasAnchor">
+<h2>Preference-based reward modeling<a href="rl-and-llms.html#rewardPreference" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="definition">
+<p><span id="def:bradleyTerry" class="definition"><strong>Definition 5.1  (Bradley-Terry model) </strong></span>Consider <span class="math inline">\(K\)</span> actions <span class="math inline">\(b_1, \dots, b_k\)</span>. Assume that pairwise preferences are made noisily according to
+<span class="math display">\[
+    P(b_j \succ b_k)
+    = \dfrac{e^{r(b_j)}}{e^{r(b_k)} + e^{r(b_j)}} = \sigma[r(b_j) - r(b_k)]
+\]</span>
+In short, preferences are encoded by additive logits given by <span class="math inline">\(r\)</span>; note that this model is transitive.</p>
+</div>
+<div class="definition">
+<p><span id="def:unlabeled-div-17" class="definition"><strong>Definition 5.2  (winners) </strong></span>A choice <span class="math inline">\(b_j\)</span> is:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Condorcet</strong> winner if <span class="math inline">\(P(b_j \succ b_{\forall k\neq j}) &gt; 0.5\)</span>.</li>
+<li><strong>Copeland</strong> winner if it has the highest number of pairwise victories.</li>
+<li><strong>Borda</strong> winner if it maximizes the expected score (heaviside step function). s</li>
+</ol>
+</div>
+<div class="definition">
+<p><span id="def:hfModel" class="definition"><strong>Definition 5.3  (preference model for trajectories) </strong></span>Assume that the probability that trajectory <span class="math inline">\(\tau^{(1)}\)</span> is preferred over <span class="math inline">\(\tau^{(2)}\)</span> is
+<span class="math display">\[
+    P(\tau^{(1)} \succ \tau^{(2)}) = \sigma \left(
+        \sum_j r^{(1)}_t - r^{(2)}_t
+    \right)
+\]</span>
+The reward model is trained by maximizing the likelihood of the observed preferences under the preference model.</p>
+</div>
+<div class="definition">
+<p><span id="def:rlhf" class="definition"><strong>Definition 5.4  (RLHF) </strong></span>The RLHF pipeline consists of three parts:</p>
+<ol style="list-style-type: decimal">
+<li>Pretraining a large-language model.</li>
+<li><strong>Supervised Fine-Tuning</strong>: collecting expert demonstrations (prompt, behavior) and finetune the model to <span class="math inline">\(\pi_{\mathrm{ref}}\)</span>.</li>
+<li><strong>Reward model training</strong>: sample multiple model outputs for each prompt. Train a reward model <span class="math inline">\(r_\phi(s, a)\)</span> using labeler ranking.</li>
+<li><strong>PPO</strong>: optimize KL-constrained reward w.r.t. <span class="math inline">\(\pi_\theta\)</span>; KL is used to prevent overfitting:
+<span class="math display">\[
+r(s, a) = r_\phi(s, a) - \beta \log \dfrac{\pi_\theta(a\mid s)}{\pi_{\mathrm{ref}}(a\mid s)}
+\]</span></li>
+</ol>
+</div>
+</div>
+<div id="dpo" class="section level2 unnumbered hasAnchor">
+<h2>Direct Preference Optimization<a href="rl-and-llms.html#dpo" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Recall the RLHF objective, fixing state (input) <span class="math inline">\(s\)</span>, the objective maximizes
+<span class="math display">\[\begin{align}
+    \mathop{\mathbb{E}}\limits_{\tau \sim \rho^\pi} \left[
+        \sum_{t=0}^{H-1} r(s_t, a_t) - \beta D(\pi(\cdot \mid s_t)\| \pi_{\mathrm{ref}}(\cdot \mid s_t))
+    \right]
+\end{align}\]</span></p>
+
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-
-
+<a href="inverse-rl.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="bibliography.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
