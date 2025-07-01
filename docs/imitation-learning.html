@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>4 Imitation Learning | Reinforcement Learning</title>
+  <meta name="description" content="4 Imitation Learning | Reinforcement Learning" />
+  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="4 Imitation Learning | Reinforcement Learning" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="4 Imitation Learning | Reinforcement Learning" />
+  
+  
+  
+
+<meta name="author" content="Nicholas Lyu" />
+
+
+<meta name="date" content="2025-06-30" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="policy-methods.html"/>
+<link rel="next" href="bibliography.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="mdp.html"><a href="mdp.html"><i class="fa fa-check"></i><b>1</b> Markov Decision Processes</a>
+<ul>
+<li class="chapter" data-level="" data-path="mdp.html"><a href="mdp.html#MDP"><i class="fa fa-check"></i>Preliminaries</a></li>
+<li class="chapter" data-level="" data-path="mdp.html"><a href="mdp.html#vFunctions"><i class="fa fa-check"></i>Value functions</a></li>
+<li class="chapter" data-level="" data-path="mdp.html"><a href="mdp.html#optimalityMDP"><i class="fa fa-check"></i>Optimality</a></li>
+<li class="chapter" data-level="" data-path="mdp.html"><a href="mdp.html#policyEval"><i class="fa fa-check"></i>Policy evaluation</a></li>
+<li class="chapter" data-level="" data-path="mdp.html"><a href="mdp.html#optimalSolutions"><i class="fa fa-check"></i>Optimal solutions</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="sampling-value-based-methods.html"><a href="sampling-value-based-methods.html"><i class="fa fa-check"></i><b>2</b> Sampling Value-based Methods</a>
+<ul>
+<li class="chapter" data-level="" data-path="sampling-value-based-methods.html"><a href="sampling-value-based-methods.html#polEval"><i class="fa fa-check"></i>Model-free policy evaluation</a></li>
+<li class="chapter" data-level="" data-path="sampling-value-based-methods.html"><a href="sampling-value-based-methods.html#modelFreeControl"><i class="fa fa-check"></i>Model free control</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="policy-methods.html"><a href="policy-methods.html"><i class="fa fa-check"></i><b>3</b> Policy Methods</a>
+<ul>
+<li class="chapter" data-level="" data-path="policy-methods.html"><a href="policy-methods.html#pg"><i class="fa fa-check"></i>Vanilla policy gradient</a></li>
+<li class="chapter" data-level="" data-path="policy-methods.html"><a href="policy-methods.html#pgReduceVar"><i class="fa fa-check"></i>Reducing variance</a>
+<ul>
+<li class="chapter" data-level="" data-path="policy-methods.html"><a href="policy-methods.html#pgBaseline"><i class="fa fa-check"></i>Baseline</a></li>
+<li class="chapter" data-level="" data-path="policy-methods.html"><a href="policy-methods.html#advEstimate"><i class="fa fa-check"></i>Generalized Advantage Estimation</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="policy-methods.html"><a href="policy-methods.html#ppo"><i class="fa fa-check"></i>Off-policy, conservative updates</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="imitation-learning.html"><a href="imitation-learning.html"><i class="fa fa-check"></i><b>4</b> Imitation Learning</a>
+<ul>
+<li class="chapter" data-level="" data-path="imitation-learning.html"><a href="imitation-learning.html#imlEasy"><i class="fa fa-check"></i>Zeroth-order approaches</a></li>
+<li class="chapter" data-level="" data-path="imitation-learning.html"><a href="imitation-learning.html#rewardShaping"><i class="fa fa-check"></i>Reward shaping</a></li>
+<li class="chapter" data-level="" data-path="imitation-learning.html"><a href="imitation-learning.html#rewardLearning"><i class="fa fa-check"></i>Reward learning</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="bibliography.html"><a href="bibliography.html"><i class="fa fa-check"></i>Bibliography</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Reinforcement Learning</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="imitation-learning" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">4</span> Imitation Learning<a href="imitation-learning.html#imitation-learning" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>In this section, we explore RL when accurate reward models are hard to specify but are implicitly embedded in expert demonstrations.</p>
+<ol style="list-style-type: decimal">
+<li><a href="imitation-learning.html#imlEasy">Naively supervising</a> based on the expert’s behavior can be problematic due to state-distribution shifts.</li>
+<li><strong>Reward shaping theorem</strong> <a href="imitation-learning.html#thm:rewardShapingTheorem">4.1</a>: potential-based transformations <span class="math inline">\(r(s, a, s&#39;)\mapsto r(s, a, s&#39;) + \gamma \Phi(s&#39;) - \Phi(s)\)</span> is the only symmetry class <u>under all possible dynamics and baseline rewards</u>
+<ul>
+<li>Main idea: the transformation effects <span class="math inline">\(V(s) \mapsto V(s) + \Phi(s)\)</span> so the optimal policy remains invariant.</li>
+<li>Fixing <span class="math inline">\(P\)</span> and baseline <span class="math inline">\(r\)</span>, there can be more symmetry.</li>
+</ul></li>
+<li>Classical approach <a href="imitation-learning.html#def:classicalIRL">4.5</a> elucidates <strong>adversarial</strong> iteration between:
+<ul>
+<li>Maximizing reward gap between expert reward and that of the current policy.</li>
+<li>Maximizing policy reward w.r.t. estimate.</li>
+</ul></li>
+</ol>
+<div id="imlEasy" class="section level2 unnumbered hasAnchor">
+<h2>Zeroth-order approaches<a href="imitation-learning.html#imlEasy" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="definition">
+<p><span id="def:imlSetup" class="definition"><strong>Definition 4.1  (problem setup) </strong></span>In the imitation setup, we have access to:</p>
+<ul>
+<li>State and action spaces, transition model.</li>
+<li><strong>No</strong> reward model <span class="math inline">\(R\)</span>.</li>
+<li>Set of one or more teacher’s demonstrations <span class="math inline">\((s_{jt}, a_{jt})\)</span>.</li>
+</ul>
+<p>Interesting tasks include:</p>
+<ul>
+<li><strong>Behavior cloning</strong>: how to reproduce the teacher’s behavior?</li>
+<li><strong>Inverse RL</strong>: how to recover <span class="math inline">\(R\)</span>?</li>
+<li><strong>Apprenticeship learning via inverse RL</strong>: use <span class="math inline">\(R\)</span> to generate a good policy.</li>
+</ul>
+</div>
+<div class="definition">
+<p><span id="def:demoiml" class="definition"><strong>Definition 4.2  (learning from demonstrations) </strong></span>Given demonstration trajectories <span class="math inline">\((s_{tj}, a_{tj})\)</span> , train a policy with supervised learning.</p>
+</div>
+<p>One problem with behavior cloning: compounding errors. Supervised learning assumes <span class="math inline">\(s_t\sim D_{\pi^*}\)</span> i.i.d, while erroneous policies induce state distribution shift <span class="math inline">\(s_t\sim D_{\pi_\theta}\)</span> during test.</p>
+<p>A simple solution to this is called DAGGER, which iteratively asks the expert to provide feedback on the states visited by the policy.</p>
+</div>
+<div id="rewardShaping" class="section level2 unnumbered hasAnchor">
+<h2>Reward shaping<a href="imitation-learning.html#rewardShaping" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>One immediate problem with learning the reward model is that the mapping <span class="math inline">\((R\to \pi^*)\)</span> is not unique. One solution to this problem is provided in <span class="citation">(<a href="#ref-ng1999policy">Ng, Harada, and Russell 1999</a>)</span>. In full generality, we consider additive transformations <span class="math inline">\(F(s, a, s&#39;)\)</span> of the reward function.</p>
+<div class="definition">
+<p><span id="def:unlabeled-div-15" class="definition"><strong>Definition 4.3  (potential-based shaping function) </strong></span>A reward shaping function <span class="math inline">\(F:S\times A\times R\to \mathbb R\)</span> is a potential-based shaping function if there exists a real-valued function <span class="math inline">\(\Phi:S\to \mathbb R\)</span> suhch that <span class="math inline">\(\forall s\in S-\{s_0\}\)</span>,
+<span class="math display">\[
+    F(s, a, s&#39;) = \gamma \Phi(s&#39;) - \Phi(s)
+\]</span>
+where <span class="math inline">\(S-\{s_0\}=S\)</span> if <span class="math inline">\(\gamma&lt;1\)</span>.</p>
+</div>
+<div style="color:blue">
+<p>Two remarks in order about the following theorem:</p>
+<ol style="list-style-type: decimal">
+<li>It includes scalar transformations <span class="math inline">\(r\mapsto \alpha\, r\)</span> as a special case.</li>
+<li>It uniquely identifies the symmetry group for <span class="math inline">\(r\mapsto r+F\)</span>, <u>assuming that transition <span class="math inline">\(P\)</span> can be picked arbitrarily under picking the gauge</u>. Fixing the transition <span class="math inline">\(P\)</span> and baseline <span class="math inline">\(r\)</span> a priori, there might be a larger class of symmetries.</li>
+</ol>
+</div>
+<div class="theorem">
+<p><span id="thm:rewardShapingTheorem" class="theorem"><strong>Theorem 4.1  (reward shaping theorem) </strong></span>The reward transformation <span class="math inline">\(r\mapsto r+F\)</span> preserves the optimal policy <span style="color:blue">for all transitions <span class="math inline">\(P\)</span> and baseline reward <span class="math inline">\(r\)</span></span> iff <span class="math inline">\(F\)</span> is a potential-based shaping function. In other words:</p>
+<ul>
+<li><strong>Sufficiency</strong>: if <span class="math inline">\(F\)</span> is potential-based, then every optimal policy under <span class="math inline">\(r\)</span> is an optimal policy in <span class="math inline">\(r&#39;=r+F\)</span>.</li>
+<li><strong>Necessity</strong>: if <span class="math inline">\(F\)</span> is not potential-based, then there exists transition models <span class="math inline">\(P\)</span> and reward function <span class="math inline">\(R\)</span> such that no optimal policy under <span class="math inline">\(r&#39;\)</span> is optimal under <span class="math inline">\(r\)</span>.</li>
+</ul>
+<p>Under this transformation, the value functions transform as
+<span class="math display">\[
+    Q(s, a)\mapsto Q(s, a) - \Phi(s), \quad V(s) \mapsto V(s) - \Phi(s)
+\]</span></p>
+</div>
+<details>
+<summary>
+Sufficiency: pick a transformation affecting <span class="math inline">\(V^*\mapsto V^*+\pi\)</span> which is independent of the policy
+</summary>
+</details>
+<p>Let <span class="math inline">\(M, M&#39;\)</span> denote MDPs under <span class="math inline">\(r, r&#39;=r+F\)</span> respectively. Recall for <span class="math inline">\(M^*\)</span> the Bellman optimality equations:
+<span class="math display">\[
+    Q^*_M(s, a)
+    = \mathop{\mathbb{E}}\limits_{s&#39;\sim P(\cdot\mid s, a)}\left[
+        r(s, a, s&#39;) + \gamma \max_{a&#39;\sim A} Q^*M(s&#39;, a&#39;)
+    \right]
+\]</span>
+Subtract <span class="math inline">\(\Phi(s)\)</span> from both sides:
+<span class="math display">\[\begin{align}
+    Q^*_M(s, a) - \Phi(s)
+    = \mathop{\mathbb{E}}\limits_{s&#39;\sim P(\cdot\mid s, a)}\left[
+        r(s, a, s&#39;) + \gamma\, \Phi(s&#39;) - \Phi(s) + \gamma \max_{a&#39;\sim A} \left[
+            Q^*M(s&#39;, a&#39;) - \Phi(s)
+        \right]
+    \right]
+\end{align}\]</span>
+But this is exactly the Bellman optimality equation for <span class="math inline">\(M&#39;\)</span> with solution
+<span class="math display">\[
+    Q^*_{M&#39;}(s, a) = Q^*_M(s, a) - \Phi(s)
+\]</span>
+Then any optimal policy for <span class="math inline">\(M\)</span> satisfying
+<span class="math display">\[
+    \pi^* = \operatorname*{arg\,max}_{\pi} V^*_M(s_0) =  \operatorname*{arg\,max}_{\pi} V^*_M(s_0) - \Phi(s_0) = \operatorname*{arg\,max}_{\pi} V^*_{M&#39;}(s_0) - \Phi(s_0)
+\]</span>
+is also optimal for <span class="math inline">\(M&#39;\)</span>.</p>
+</div>
+<div id="rewardLearning" class="section level2 unnumbered hasAnchor">
+<h2>Reward learning<a href="imitation-learning.html#rewardLearning" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="definition">
+<p><span id="def:linFeatureAssumption" class="definition"><strong>Definition 4.4  (linear features) </strong></span>Assuming that we have a feature function <span class="math inline">\(x:\mathcal S\times \mathcal A\to \mathbb R^n\)</span> such that the reward is linear in features:
+<span class="math display">\[
+    r(s, a) = w^T x(s, a), \quad w\in \mathbb R^n\text{   and  } \|w_\infty\|_\leq 1
+\]</span>
+Fixing features a priori, the goal of reward learning will be to identify the weight vector <span class="math inline">\(w\)</span> given a set of demonstrations.</p>
+</div>
+<div class="proposition">
+<p><span id="prp:featureMatchingLearning" class="proposition"><strong>Proposition 4.1  (optimal-policy learning ≈ feature matching) </strong></span>Given features <span class="math inline">\(x\)</span> satisfying assumptions <a href="imitation-learning.html#def:linFeatureAssumption">4.4</a> and policy <span class="math inline">\(\pi\)</span>, define the <strong>expected discounted feature</strong> <span class="math inline">\(\mu_\pi: \mathbb R^n\)</span> by
+<span class="math display">\[
+    \mu_\pi =  \mathop{\mathbb{E}}\limits_{\pi} \left[
+        \sum_{t=0}^\infty \gamma^t x(s_t, a_t)\mid s_0
+    \right]
+\]</span>
+Assuming that <span class="math inline">\(r=w^Tx\)</span>, then
+<span class="math display">\[
+    \|\mu_\pi - \mu_{\pi^*}\|_1\leq \epsilon \implies V^*(s_0) - V^\pi(s_0) \leq \epsilon
+\]</span></p>
+</div>
+<p>Unrolling the linear reward function, <span class="math inline">\(V^\pi\)</span> can be rewritten as
+<span class="math display">\[
+    V^\pi(s_0) = \mathop{\mathbb{E}}\limits_{\pi} \left[
+        \sum_{t=0}^\infty \gamma^t w^T r(s_t, a_t)\mid s_0
+    \right]
+    = w^T \mu_\pi
+\]</span>
+Using Holder’s inequality with <span class="math inline">\(\|w\|_\infty \leq 1\)</span>, we obtain
+<span class="math display">\[
+    \|\mu_\pi - \mu_{\pi^*}\|_1\leq \epsilon \implies
+    |w^T\mu_\pi - w^T \mu_{\pi^*}| \leq \epsilon
+\]</span></p>
+<div class="definition">
+<p><span id="def:classicalIRL" class="definition"><strong>Definition 4.5  (classical IRL algorithm) </strong></span>Assuming <span class="math inline">\(r=w^Tx\)</span> for features <span class="math inline">\(x\)</span> given a priori:</p>
+<ol style="list-style-type: decimal">
+<li>Compute the optimal demonstration’s discounted mean features <span class="math inline">\(\mu_{\pi^*}\)</span> from demonstration (proposition <a href="imitation-learning.html#prp:featureMatchingLearning">4.1</a>).</li>
+<li>Since the optimal policy satisfies <span class="math inline">\(w^T \mu_{\pi^*} \geq w^T \mu_{\pi}\)</span>, initialize <span class="math inline">\(\pi\)</span> and repeat until convergence:
+<ul>
+<li>Optimize <span class="math inline">\(w\mapsto \operatorname*{arg\,max}_{\|w\|_\infty \leq 1 } w^T \mu_{\pi^*} - w^T \mu_\pi\)</span>.</li>
+<li>Iterate <span class="math inline">\(\pi \mapsto \operatorname*{arg\,max}_{\pi} w^T \mu_\pi\)</span>.</li>
+</ul></li>
+</ol>
+</div>
+
+</div>
+</div>
+<h3>Bibliography<a href="bibliography.html#bibliography" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-ng1999policy" class="csl-entry">
+Ng, Andrew Y, Daishi Harada, and Stuart Russell. 1999. <span>“Policy Invariance Under Reward Transformations: Theory and Application to Reward Shaping.”</span> In <em>Icml</em>, 99:278–87. Citeseer.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="policy-methods.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="bibliography.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

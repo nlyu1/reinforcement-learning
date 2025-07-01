@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>2 Sampling Value-based Methods | Reinforcement Learning</title>
   <meta name="description" content="2 Sampling Value-based Methods | Reinforcement Learning" />
-  <meta name="generator" content="bookdown 0.39 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
   <meta property="og:title" content="2 Sampling Value-based Methods | Reinforcement Learning" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Nicholas Lyu" />
 
 
-<meta name="date" content="2025-06-28" />
+<meta name="date" content="2025-06-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -64,7 +64,6 @@
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
-  margin-bottom: 0em;
 }
 .hanging div.csl-entry {
   margin-left:2em;
@@ -118,6 +117,12 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="policy-methods.html"><a href="policy-methods.html#advEstimate"><i class="fa fa-check"></i>Generalized Advantage Estimation</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="policy-methods.html"><a href="policy-methods.html#ppo"><i class="fa fa-check"></i>Off-policy, conservative updates</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="imitation-learning.html"><a href="imitation-learning.html"><i class="fa fa-check"></i><b>4</b> Imitation Learning</a>
+<ul>
+<li class="chapter" data-level="" data-path="imitation-learning.html"><a href="imitation-learning.html#imlEasy"><i class="fa fa-check"></i>Zeroth-order approaches</a></li>
+<li class="chapter" data-level="" data-path="imitation-learning.html"><a href="imitation-learning.html#rewardShaping"><i class="fa fa-check"></i>Reward shaping</a></li>
+<li class="chapter" data-level="" data-path="imitation-learning.html"><a href="imitation-learning.html#rewardLearning"><i class="fa fa-check"></i>Reward learning</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="bibliography.html"><a href="bibliography.html"><i class="fa fa-check"></i>Bibliography</a></li>
 </ul>
@@ -300,9 +305,7 @@ One can also imagine “unrolling” the consistency relations twice (or more) b
 <li>Repeat until convergence:
 <ul>
 <li>Observe <span class="math inline">\((s_t, a_t, r_t, s_{t+1}, a_{t+1})\)</span>.</li>
-<li>Update <span class="math inline">\(Q(s_t, a_t) = \bar \alpha Q(s_t, a_t) + \alpha \left[
-  r_t + \gamma Q(s_{t+1}, a_{t+1})
-\right]\)</span>.
+<li>Update <span class="math inline">\(Q(s_t, a_t) = \bar \alpha Q(s_t, a_t) + \alpha \left[  r_t + \gamma Q(s_{t+1}, a_{t+1})  \right]\)</span>.
 <ul>
 <li>Note that alternatively, we only need <span class="math inline">\(s_{t+1}\)</span> and replace
 <span class="math inline">\(\gamma Q(s_{t+1}, a_{t+1}) \mapsto \gamma \mathop{\mathbb{E}}\limits_{a_{t+1}\sim \pi(s_{t+1})} Q(s_{t+1}, a_{t+1})\)</span>.</li>
@@ -320,9 +323,7 @@ One can also imagine “unrolling” the consistency relations twice (or more) b
 <li>Given a static list of trajectories, repeat until convergence:
 <ul>
 <li>For each <span class="math inline">\((s, a, r, s&#39;)\)</span>:</li>
-<li><span class="math inline">\(Q(s, a) \leftarrow \bar \alpha Q(s, a) + \alpha \left[
-  r + \gamma \max_{a&#39;} Q(s&#39;, a&#39;)
-\right]\)</span>.</li>
+<li><span class="math inline">\(Q(s, a) \leftarrow \bar \alpha Q(s, a) + \alpha \left[  r + \gamma \max_{a&#39;} Q(s&#39;, a&#39;)  \right]\)</span>.</li>
 </ul></li>
 <li>Repeat <span class="math inline">\(Q\)</span>-greedy policy.</li>
 </ol>
