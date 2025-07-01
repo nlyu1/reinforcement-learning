@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Bibliography | Reinforcement Learning</title>
-  <meta name="description" content="Bibliography | Reinforcement Learning" />
+  <title>6 Exploration | Reinforcement Learning</title>
+  <meta name="description" content="6 Exploration | Reinforcement Learning" />
   <meta name="generator" content="bookdown 0.39 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Bibliography | Reinforcement Learning" />
+  <meta property="og:title" content="6 Exploration | Reinforcement Learning" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Bibliography | Reinforcement Learning" />
+  <meta name="twitter:title" content="6 Exploration | Reinforcement Learning" />
   
   
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="exploration.html"/>
-
+<link rel="prev" href="rlLLMs.html"/>
+<link rel="next" href="bibliography.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -153,25 +153,22 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="bibliography" class="section level1 unnumbered hasAnchor">
-<h1>Bibliography<a href="bibliography.html#bibliography" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="exploration" class="section level1 hasAnchor" number="6">
+<h1><span class="header-section-number">6</span> Exploration<a href="exploration.html#exploration" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="bandits" class="section level2 unnumbered hasAnchor">
+<h2>Bandits<a href="exploration.html#bandits" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="definition">
+<p><span id="def:multiArmBandit" class="definition"><strong>Definition 6.1  (multiarmed bandits) </strong></span>A multi-armed bandit consists of a known set of <span class="math inline">\(m\)</span> actions, R^a(r)=P(ra)$ an unknown yet stationary distribution over rewards. At each step, the agent selects action <span class="math inline">\(a_t\in \mathcal A\)</span> and the environment generates a reward. The goal is the maximize the cumulative reward <span class="math inline">\(\sum_{\tau=1}^t r_\tau\)</span>.</p>
+</div>
+<div class="definition">
+<p><span id="def:unlabeled-div-18" class="definition"><strong>Definition 6.2  (regret) </strong></span>Consider the following definitions; note that recall is a statistical average definition, and that minimizing regret = maximizing expected cumulative reward.</p>
+<ul>
+<li><strong>Action-value</strong> <span class="math inline">\(Q(a)=\mathbb E[r\mid a]\)</span> denotes the mean reward for action <span class="math inline">\(a\)</span>.</li>
+<li><strong>Optimal value</strong> <span class="math inline">\(V^* = Q(a^*) = \max_a Q(a)\)</span></li>
+<li><strong>Regret</strong> is the opportunity loss for one step <span class="math inline">\(I_t = \mathbb E[V^* - Q(a_t)]\)</span>.</li>
+</ul>
+</div>
 
-<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
-<div class="csl-entry">
-Achiam, Joshua, David Held, Aviv Tamar, and Pieter Abbeel. 2017. <span>“Constrained Policy Optimization.”</span> In <em>International Conference on Machine Learning</em>, 22–31. PMLR.
-</div>
-<div class="csl-entry">
-Finn, Chelsea, Sergey Levine, and Pieter Abbeel. 2016. <span>“Guided Cost Learning: Deep Inverse Optimal Control via Policy Optimization.”</span> In <em>International Conference on Machine Learning</em>, 49–58. PMLR.
-</div>
-<div class="csl-entry">
-Ng, Andrew Y, Daishi Harada, and Stuart Russell. 1999. <span>“Policy Invariance Under Reward Transformations: Theory and Application to Reward Shaping.”</span> In <em>Icml</em>, 99:278–87. Citeseer.
-</div>
-<div class="csl-entry">
-Polyanskiy, Yury, and Yihong Wu. 2025. <em>Information Theory: From Coding to Learning</em>. Cambridge university press.
-</div>
-<div class="csl-entry">
-Rajeswaran, Aravind, Chelsea Finn, Sham M Kakade, and Sergey Levine. 2019. <span>“Meta-Learning with Implicit Gradients.”</span> <em>Advances in Neural Information Processing Systems</em> 32.
-</div>
 </div>
 </div>
             </section>
@@ -179,8 +176,8 @@ Rajeswaran, Aravind, Chelsea Finn, Sham M Kakade, and Sergey Levine. 2019. <span
           </div>
         </div>
       </div>
-<a href="exploration.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="rlLLMs.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="bibliography.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

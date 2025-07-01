@@ -57,8 +57,12 @@ def:bradleyTerry
 def:unlabeled-div-17
 def:hfModel
 def:rlhf
+def:dpoAlg
+def:multiArmBandit
+def:unlabeled-div-18
 mdp
-sample-based-mdp-solutions
-policy-methods
+sampMDP
+polMethods
 inverse-rl
-rl-and-llms
+rlLLMs
+exploration

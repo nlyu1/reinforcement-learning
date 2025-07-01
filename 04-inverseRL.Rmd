@@ -15,12 +15,12 @@ In this section, we relax the assumption that the reward model is known. The tas
     - Maximizing reward gap between expert reward and that of the current policy. 
     - Maximizing policy reward w.r.t. estimate. 
 4. Another approach to the reward identifiably problem is to use the principle of maximum entropy (algorithm \@ref(def:maxEntIRLAlg)). Assuming knowledge of the dynamics model $P$, every policy $\pi_\theta$ induces a distribution $\rho^{\pi_\theta}$. Each reward model $r_\phi$ induces an optimal policy $\pi^*(r_\phi)$, which in turn induces an optimal distribution $\rho^*_{r_\phi}$ over trajectories.
-    a. <span style="color:blue"> We look for a reward model **whose optimal policy $\pi_\phi$ induces a trajectory distribution** satisfying (theorem \@ref(thm:maxEntReduction)): 
+    a. <span style="color:blue"> We look for a reward model **whose entropy-maximizing $\pi_\phi$ induces a trajectory distribution** satisfying (theorem \@ref(thm:maxEntReduction)): 
         - Reward-compatible with empirical expert trajectory. 
-        - Has maximal entropy. </span>
+        - Has maximal entropy across $r_\phi$. </span>
     b. We break this optimization into optimizing $r_\phi$ over (maximum entropy given $r_\phi$, and reward-compatible with empirical data); the inner optimizer is a Boltzmann distribution. 
     c. It turns out that this optimization is equivalent to looking for a reward model under whose Boltzmann distribution the empirical expert trajectories are MLE: **key theorem \@ref(thm:maxEntReduction)** 
-        - Additionally, the gradient looks exactly like maximizing the separation between the empirically expected reward and the expected reward under the Boltzmann distribution, echoing the classical IRL construction \@ref(def:classicalIRL). 
+        - Interestingly, the gradient looks exactly like maximizing the separation between the empirically expected reward and the expected reward under the Boltzmann distribution, echoing the classical IRL construction \@ref(def:classicalIRL). 
         - Critical assumption: the parameterization $r_\phi$ has linear degree of freedom. 
 
 ## Zeroth-order approaches {#imlEasy -}

@@ -1,4 +1,4 @@
-# Policy Methods 
+# Policy Methods {#polMethods}
 
 In this section, we differentiably parameterize the policy and improve by gradient descent. While **value methods** solve control by computing the (action-) value functions, **policy methods** directly improve the policy. 
 

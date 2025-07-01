@@ -1,0 +1,15 @@
+# Exploration
+
+## Bandits {#bandits -}
+
+:::{.definition #multiArmBandit name="multiarmed bandits"}
+A multi-armed bandit consists of a known set of $m$ actions, \mca R^a(r)=\mbb P(r\mid a)$ an unknown yet stationary distribution over rewards. At each step, the agent selects action $a_t\in \mca A$ and the environment generates a reward. The goal is the maximize the cumulative reward $\sum_{\tau=1}^t r_\tau$. 
+:::
+
+:::{.definition name="regret"}
+Consider the following definitions; note that recall is a statistical average definition, and that minimizing regret = maximizing expected cumulative reward. 
+
+- **Action-value** $Q(a)=\mbb E[r\mid a]$ denotes the mean reward for action $a$. 
+- **Optimal value** $V^* = Q(a^*) = \max_a Q(a)$
+- **Regret** is the opportunity loss for one step $I_t = \mbb E[V^* - Q(a_t)]$. 
+:::

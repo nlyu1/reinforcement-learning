@@ -1,4 +1,4 @@
-# Sample-based MDP solutions 
+# Sample-based MDP solutions {#sampMDP}
 
 This section explores RL solutions when the environment dynamics $P(\cdot\mid s, a)$ and rewards are **not known**. This is also known as the **model-free** regime. 
 

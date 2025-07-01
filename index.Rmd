@@ -44,3 +44,31 @@ link-citations: true
 
 # Preface {-}
 These notes accompany the summer 2025 self-learning for _Reinforcement Learning_. 
+
+1. [Markov Decision Processes](#mdp) explores closed-form solutions to finite and infinite-horizon MDPs with **known dynamics and rewards**.
+  a. Recursive and optimality operators; contraction properties. 
+  b. Control problem can be reduced to iterate (policy evaluation + greedy action), i.e. policy iteration. 
+2. [Sample-based MDP solutions](#sampMDP) explores MDP solutions with **unknown dynamics, known rewards**. 
+  - Estimate procedures: 
+    - Monte-Carlo: high-variance no bias, no Markov assumptions, converges to MSE-optimal estimates. 
+    - Temporal difference: low variance high bias, need Markov conditions; converges to DP solution on empirical distribution 
+  - Monte-Carlo policy iteration: MC + PI, online on-policy. 
+  - SARSA: TD policy iteration, online on-policy 
+  - Q-learning: action-value iteration; can use TD (canonical) or MC. 
+3. [Policy Methods](#polMethods) explores an orthogonal approach by directly optimizing policies. Foundational policy gradient theorem \@ref(thm:PG) is improved in two areas:
+  - Reducing variance: baseline theorem \@ref(thm:pgBaseline). 
+  - Using off-policy data: relative policy difference theorem \@ref(def:surrogatePG). 
+4. [Inverse RL](#iRL) explores MDP solutions with **unknown rewards**, replacing them with estimates from expert demonstration; orthogonal to dynamics estimation methods. 
+  - Main problem: identifiably problem of deducing rewards from expert policies; a partial answer is the reward shaping theorem \@ref(thm:rewardShapingTheorem). 
+  - Foundational result is [max-entropy IRL](#maxEntropyiRL) which has clean closed-form optimization. 
+5. [RL for LLMs](#rlLLMs): eliciting rewards from preferences; direct preference optimization. 
+
+Cool theorems:
+
+- [Markov Decision Processes](#mdp): contraction properties \@ref(thm:contraction), optimality of $Q^*$-greedy policies \@ref(thm:greedyPolicyOptimal). Convergence bound of VI and PI. 
+- [Sample-based MDP solutions](#sampMDP): NA, just definition. 
+- [Policy methods](#polMethods): PG theorem \@ref(thm:PG), baseline theorem \@ref(thm:pgBaseline), relative policy difference theorem \@ref(def:surrogatePG). 
+  - Proof of relative policy performance theorem is a canonical example applying large-deviation theory and $f$-divergences. 
+- [Inverse RL](#iRL): reward shaping theorem \@ref(thm:rewardShapingTheorem), max-entropy reduction theorem \@ref(thm:maxEntReduction). 
+  - Proof theme: Boltzmann methods, and interchange between single and nested optimizations. 
+- [RL for LLMs](#rlLLMs): [DPO reduction](#dpo); variational characterization of KL and using analytic solutions to inner optimizations. 

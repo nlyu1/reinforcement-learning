@@ -109,15 +109,15 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="sampMDP.html"><a href="sampMDP.html#polEval"><i class="fa fa-check"></i>Model-free policy evaluation</a></li>
 <li class="chapter" data-level="" data-path="sampMDP.html"><a href="sampMDP.html#modelFreeControl"><i class="fa fa-check"></i>Model free control</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="policy-methods.html"><a href="policy-methods.html"><i class="fa fa-check"></i><b>3</b> Policy Methods</a>
+<li class="chapter" data-level="3" data-path="polMethods.html"><a href="polMethods.html"><i class="fa fa-check"></i><b>3</b> Policy Methods</a>
 <ul>
-<li class="chapter" data-level="" data-path="policy-methods.html"><a href="policy-methods.html#pg"><i class="fa fa-check"></i>Vanilla policy gradient</a></li>
-<li class="chapter" data-level="" data-path="policy-methods.html"><a href="policy-methods.html#pgReduceVar"><i class="fa fa-check"></i>Reducing variance</a>
+<li class="chapter" data-level="" data-path="polMethods.html"><a href="polMethods.html#pg"><i class="fa fa-check"></i>Vanilla policy gradient</a></li>
+<li class="chapter" data-level="" data-path="polMethods.html"><a href="polMethods.html#pgReduceVar"><i class="fa fa-check"></i>Reducing variance</a>
 <ul>
-<li class="chapter" data-level="" data-path="policy-methods.html"><a href="policy-methods.html#pgBaseline"><i class="fa fa-check"></i>Baseline</a></li>
-<li class="chapter" data-level="" data-path="policy-methods.html"><a href="policy-methods.html#advEstimate"><i class="fa fa-check"></i>Generalized Advantage Estimation</a></li>
+<li class="chapter" data-level="" data-path="polMethods.html"><a href="polMethods.html#pgBaseline"><i class="fa fa-check"></i>Baseline</a></li>
+<li class="chapter" data-level="" data-path="polMethods.html"><a href="polMethods.html#advEstimate"><i class="fa fa-check"></i>Generalized Advantage Estimation</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="policy-methods.html"><a href="policy-methods.html#ppo"><i class="fa fa-check"></i>Off-policy, conservative updates</a></li>
+<li class="chapter" data-level="" data-path="polMethods.html"><a href="polMethods.html#ppo"><i class="fa fa-check"></i>Off-policy, conservative updates</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="inverse-rl.html"><a href="inverse-rl.html"><i class="fa fa-check"></i><b>4</b> Inverse RL</a>
 <ul>
@@ -126,10 +126,10 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="inverse-rl.html"><a href="inverse-rl.html#iRL"><i class="fa fa-check"></i>Classical inverse RL</a></li>
 <li class="chapter" data-level="" data-path="inverse-rl.html"><a href="inverse-rl.html#maxEntropyiRL"><i class="fa fa-check"></i>Max-entropy IRL</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="rl-for-llms.html"><a href="rl-for-llms.html"><i class="fa fa-check"></i><b>5</b> RL for LLMs</a>
+<li class="chapter" data-level="5" data-path="rlLLMs.html"><a href="rlLLMs.html"><i class="fa fa-check"></i><b>5</b> RL for LLMs</a>
 <ul>
-<li class="chapter" data-level="" data-path="rl-for-llms.html"><a href="rl-for-llms.html#rewardPreference"><i class="fa fa-check"></i>Preference-based reward modeling</a></li>
-<li class="chapter" data-level="" data-path="rl-for-llms.html"><a href="rl-for-llms.html#dpo"><i class="fa fa-check"></i>Direct Preference Optimization</a></li>
+<li class="chapter" data-level="" data-path="rlLLMs.html"><a href="rlLLMs.html#rewardPreference"><i class="fa fa-check"></i>Preference-based reward modeling</a></li>
+<li class="chapter" data-level="" data-path="rlLLMs.html"><a href="rlLLMs.html#dpo"><i class="fa fa-check"></i>Direct Preference Optimization</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="exploration.html"><a href="exploration.html"><i class="fa fa-check"></i><b>6</b> Exploration</a>
 <ul>
@@ -153,34 +153,34 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="policy-methods" class="section level1 hasAnchor" number="3">
-<h1><span class="header-section-number">3</span> Policy Methods<a href="policy-methods.html#policy-methods" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="polMethods" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">3</span> Policy Methods<a href="polMethods.html#polMethods" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>In this section, we differentiably parameterize the policy and improve by gradient descent. While <strong>value methods</strong> solve control by computing the (action-) value functions, <strong>policy methods</strong> directly improve the policy.</p>
 <ol style="list-style-type: decimal">
-<li>The Policy Gradient (PG) theorem <a href="policy-methods.html#thm:PG">3.1</a> establishes the general form of <em>score function</em> <span class="math inline">\(\nabla_\theta \log \pi_\theta(a_t\mid s_t)\)</span> multiplied by signal <span class="math inline">\(R(\tau)\)</span>.</li>
+<li>The Policy Gradient (PG) theorem <a href="polMethods.html#thm:PG">3.1</a> establishes the general form of <em>score function</em> <span class="math inline">\(\nabla_\theta \log \pi_\theta(a_t\mid s_t)\)</span> multiplied by signal <span class="math inline">\(R(\tau)\)</span>.</li>
 <li>Two problems with vanilla PG: <u>high variance of signal</u> and <u>low sample efficiency from online learning</u></li>
-<li>Method to <a href="policy-methods.html#pgReduceVar">reduce variance</a>:
+<li>Method to <a href="polMethods.html#pgReduceVar">reduce variance</a>:
 <ul>
-<li><strong>Baseline theorem <a href="policy-methods.html#thm:pgBaseline">3.2</a></strong> establishes that <span style="color:blue">adjusting by a state and history-dependent function does not introduce bias. </span>
+<li><strong>Baseline theorem <a href="polMethods.html#thm:pgBaseline">3.2</a></strong> establishes that <span style="color:blue">adjusting by a state and history-dependent function does not introduce bias. </span>
 <ul>
 <li>Baseline cannot depend on <span class="math inline">\(a_t\)</span>; can be <span class="math inline">\(\theta\)</span>-dependent; should be frozen during <span class="math inline">\(\theta\)</span>-gradient calculation.</li>
-<li>Remaining rewards, <span class="math inline">\(Q(s, a)\)</span>, and advantage <span class="math inline">\(A=Q-V\)</span> are all valid signals (corollary <a href="policy-methods.html#cor:lowvarPG">3.1</a>).</li>
+<li>Remaining rewards, <span class="math inline">\(Q(s, a)\)</span>, and advantage <span class="math inline">\(A=Q-V\)</span> are all valid signals (corollary <a href="polMethods.html#cor:lowvarPG">3.1</a>).</li>
 </ul></li>
-<li><a href="policy-methods.html#advEstimate">Generalized advantage estimation</a>: interpolation between bootstrapping and sampling.</li>
+<li><a href="polMethods.html#advEstimate">Generalized advantage estimation</a>: interpolation between bootstrapping and sampling.</li>
 </ul></li>
-<li>Using <a href="policy-methods.html#ppo">off-policy data</a>: intuitively, similar policies should be able to share data.
+<li>Using <a href="polMethods.html#ppo">off-policy data</a>: intuitively, similar policies should be able to share data.
 <ul>
-<li><span style="color:blue"><strong>Relative policy performance theorem <a href="policy-methods.html#thm:relPerfBound">3.4</a></strong>: performance of <span class="math inline">\(\pi&#39;\)</span> is lower bounded by (performance of <span class="math inline">\(\pi\)</span>) + (a surrogate loss <span class="math inline">\(\mathcal L_\pi(\pi&#39;)\)</span>) + (square root of KL). </span>
+<li><span style="color:blue"><strong>Relative policy performance theorem <a href="polMethods.html#thm:relPerfBound">3.4</a></strong>: performance of <span class="math inline">\(\pi&#39;\)</span> is lower bounded by (performance of <span class="math inline">\(\pi\)</span>) + (a surrogate loss <span class="math inline">\(\mathcal L_\pi(\pi&#39;)\)</span>) + (square root of KL). </span>
 <ul>
 <li>Surrogate loss should be <em>maximized</em> (confusing entymology).<br />
 </li>
 <li><u>Surrogate loss gradient degenerates to online PG gradient </u> when <span class="math inline">\(\pi&#39;=\pi\)</span>.</li>
-<li>Theorem proof: performance difference lemma <a href="policy-methods.html#thm:PDL">3.3</a> + info-theory arguments (variational characterization of TV + Pinsker inequality).</li>
+<li>Theorem proof: performance difference lemma <a href="polMethods.html#thm:PDL">3.3</a> + info-theory arguments (variational characterization of TV + Pinsker inequality).</li>
 </ul></li>
 <li>Implication: <span style="color:blue"> off-policy PG = optimizing surrogate-loss subject to small KL deviation </span></li>
-<li>Approximately enforce small-KL constraint by clipping: PPO-Clip <a href="policy-methods.html#def:ppoClip">3.8</a>.</li>
+<li>Approximately enforce small-KL constraint by clipping: PPO-Clip <a href="polMethods.html#def:ppoClip">3.8</a>.</li>
 </ul></li>
-<li><strong>Full off-policy PG algorithm</strong> <a href="policy-methods.html#def:surrogatePG">3.7</a>. Moving parts include:
+<li><strong>Full off-policy PG algorithm</strong> <a href="polMethods.html#def:surrogatePG">3.7</a>. Moving parts include:
 <ul>
 <li>Estimating advantage: use MC or (how much) TD? Using another value-based approximation model is referred to as using a <strong>critic</strong>.</li>
 <li>Enforcing KL-constraints: clipping, adaptive-KL, or other methods.</li>
@@ -193,7 +193,7 @@ div.csl-indent {
 <li>On-policy data reuse: it takes nontrivial effort for data to be reusable for on-policy methods.</li>
 </ul>
 <div id="pg" class="section level2 unnumbered hasAnchor">
-<h2>Vanilla policy gradient<a href="policy-methods.html#pg" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<h2>Vanilla policy gradient<a href="polMethods.html#pg" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ol style="list-style-type: decimal">
 <li>Policy-based RL has better convergence properties, learns stochastic policies, and are often effective in high-dimensional or continuous spaces.</li>
 <li>On the other hand, convergence is local and evaluating a policy is often <strong>high-variance</strong>.</li>
@@ -241,9 +241,9 @@ where <span class="math inline">\(\dfrac 1 {g(\theta)}\nabla_\theta g(\theta) = 
 <p>Intuition tells us that the reinforce signal for the action at time <span class="math inline">\(t\)</span> <em>should not be dependent</em> upon past rewards <span class="math inline">\(r_t, \dots, r_{t-1}\)</span>. This is in fact the case. We prove a more general result in the next subsection.</p>
 </div>
 <div id="pgReduceVar" class="section level2 unnumbered hasAnchor">
-<h2>Reducing variance<a href="policy-methods.html#pgReduceVar" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<h2>Reducing variance<a href="polMethods.html#pgReduceVar" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div id="pgBaseline" class="section level3 unnumbered hasAnchor">
-<h3>Baseline<a href="policy-methods.html#pgBaseline" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<h3>Baseline<a href="polMethods.html#pgBaseline" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>To reduce variance, we prove that the gradient direction of <span class="math inline">\(\pi_\theta(a_t\mid s_t)\)</span> can be adjusted by a <span class="math inline">\((s_0, \dots, s_{t-1}, a_{t-1}, r_{t-1}, s_t)\)</span>-dependent baseline <span class="math inline">\(B_t\)</span> without introducing bias, so that:</p>
 <ol style="list-style-type: decimal">
 <li><span class="math inline">\(B_t=\)</span> accumulated rewards: <span class="math inline">\(R_t-B_t=\)</span> remaining rewards is a valid signal.</li>
@@ -322,7 +322,7 @@ The remaining reward of a trajectory at time <span class="math inline">\(t\)</sp
 <summary>
 Proof
 </summary>
-<p>The first equation follows from the baseline theorem <a href="policy-methods.html#thm:pgBaseline">3.2</a> by setting <span class="math inline">\(B_t(\sigma_t)\)</span> to be the accumulated rewards. We furnish another slick proof here:</p>
+<p>The first equation follows from the baseline theorem <a href="polMethods.html#thm:pgBaseline">3.2</a> by setting <span class="math inline">\(B_t(\sigma_t)\)</span> to be the accumulated rewards. We furnish another slick proof here:</p>
 <p>Assume for simplicity <span class="math inline">\(\gamma=1\)</span>. Let <span class="math inline">\(J_t(\theta)=\mathop{\mathbb{E}}\limits_{\tau}[r_t(\tau)]\)</span>, then applying the REINFORCE theorem to the single reward term <span class="math inline">\(J_t=\mathop{\mathbb{E}}\limits_{\tau}[r_t(\tau)]\)</span> yields
 <span class="math display">\[\begin{align}
     \nabla_\theta J_t(\theta)
@@ -340,7 +340,7 @@ Note that here <span class="math inline">\(r_t\)</span> is only dependent upon <
 Applying the baseline theorem to the result above proves the validity of the advantage function.
 </details>
 <div class="definition">
-<p><span id="def:unlabeled-div-12" class="definition"><strong>Definition 3.3  (REINFORCE algorithm) </strong></span>Using corollary <a href="policy-methods.html#cor:lowvarPG">3.1</a> above, consider the <strong>online, on-policy</strong> algorithm:</p>
+<p><span id="def:unlabeled-div-12" class="definition"><strong>Definition 3.3  (REINFORCE algorithm) </strong></span>Using corollary <a href="polMethods.html#cor:lowvarPG">3.1</a> above, consider the <strong>online, on-policy</strong> algorithm:</p>
 <ol style="list-style-type: decimal">
 <li>Initialize stochastic policy <span class="math inline">\(\pi_\theta\)</span>.</li>
 <li>Repeat until convergence:
@@ -376,7 +376,7 @@ Applying the baseline theorem to the result above proves the validity of the adv
 </div>
 </div>
 <div id="advEstimate" class="section level3 unnumbered hasAnchor">
-<h3>Generalized Advantage Estimation<a href="policy-methods.html#advEstimate" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<h3>Generalized Advantage Estimation<a href="polMethods.html#advEstimate" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Another way of reducing bias is to introduce bootstrap the reinforcement signal. Consider the <span class="math inline">\(N\)</span>-step advantage estimators:</p>
 <p><span class="math display">\[\begin{align}
     \hat A_t^{(1)}
@@ -410,7 +410,7 @@ Note that <span class="math inline">\(\lambda=0\)</span> reduces to TD while <sp
 </div>
 </div>
 <div id="ppo" class="section level2 unnumbered hasAnchor">
-<h2>Off-policy, conservative updates<a href="policy-methods.html#ppo" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<h2>Off-policy, conservative updates<a href="polMethods.html#ppo" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The central improvements to PG all involve problems stemming from (1) high-variance of rewards, or (2) the online property: we only ever update policy based on trajectories collected <em>using the current policy</em>.</p>
 <ol style="list-style-type: decimal">
 <li>The on-policy update rule results in low data efficiency.</li>
@@ -473,10 +473,10 @@ Sustituting this into the sum yields
     &amp;= \dfrac{1}{1-\gamma} %
   \mathop{\mathbb{E}}\limits_{\substack{a\sim \pi \\ s\sim d^{\pi}}} \left[\dfrac{\pi&#39;(a\mid s)}{\pi(a\mid s)}A^\pi(s, a)\right]
 \end{align}\]</span>
-The only difference from the analytic expression in theorem <a href="policy-methods.html#thm:PDL">3.3</a> is <span class="math inline">\(d^{\pi&#39;}\mapsto d^\pi\)</span>. This is also known as the <strong>surrogate loss</strong> for off-policy PG.</p>
+The only difference from the analytic expression in theorem <a href="polMethods.html#thm:PDL">3.3</a> is <span class="math inline">\(d^{\pi&#39;}\mapsto d^\pi\)</span>. This is also known as the <strong>surrogate loss</strong> for off-policy PG.</p>
 </div>
 <div class="theorem">
-<p><span id="thm:relPerfBound" class="theorem"><strong>Theorem 3.4  (relative policy performance bounds) </strong></span>The performance difference estimate in theorem <a href="policy-methods.html#thm:PDL">3.3</a> is accurate up to expected KL of the policies <span class="citation">(<a href="#ref-achiam2017constrained">Achiam et al. 2017</a>)</span>.
+<p><span id="thm:relPerfBound" class="theorem"><strong>Theorem 3.4  (relative policy performance bounds) </strong></span>The performance difference estimate in theorem <a href="polMethods.html#thm:PDL">3.3</a> is accurate up to expected KL of the policies <span class="citation">(<a href="#ref-achiam2017constrained">Achiam et al. 2017</a>)</span>.
 <span class="math display">\[
     \left|\left[J(\pi&#39;) - J(\pi)\right] - \mathcal L_\pi(\pi&#39;)\right| \leq C\sqrt{\mathop{\mathbb{E}}\limits_{s\sim d^\pi} D_{\mathrm{KL}}\left(\pi&#39;(\cdot\mid s)\| \pi(\cdot\mid s)\right)}
 \]</span>
@@ -553,7 +553,7 @@ initialize <span class="math inline">\(\pi_\phi\)</span> and repeat until conver
 \]</span>
 We will be assured small KL if <span class="math inline">\(\pi&#39;(a|s)/\pi(a|s)\approx 1\)</span>. One way to do so is to withold reinforcing feedback to increase (resp. decrease) <span class="math inline">\(\pi&#39;(a|s)\)</span> when <span class="math inline">\(\pi&#39;(a|s)/\pi(a|s)\)</span> is greater (resp. less) than <span class="math inline">\(\pi(a|s)\)</span> by some amount. This results in PPO-clip.</p>
 <div class="definition">
-<p><span id="def:ppoClip" class="definition"><strong>Definition 3.8  (PPO-Clip) </strong></span>Choose hyperparameter <span class="math inline">\(\epsilon&lt;1\)</span> (usually <span class="math inline">\(0.1-0.3\)</span>); same as algorithm <a href="policy-methods.html#def:surrogatePG">3.7</a> except with
+<p><span id="def:ppoClip" class="definition"><strong>Definition 3.8  (PPO-Clip) </strong></span>Choose hyperparameter <span class="math inline">\(\epsilon&lt;1\)</span> (usually <span class="math inline">\(0.1-0.3\)</span>); same as algorithm <a href="polMethods.html#def:surrogatePG">3.7</a> except with
 <span class="math display">\[
     r^\theta_{jt} A^{\pi_\phi}(s_{jt}\mid s_{jt})
     \mapsto \min \left[

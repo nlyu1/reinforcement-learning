@@ -1,8 +1,15 @@
-# RL and LLMs
+# RL for LLMs {#rlLLMs}
 
 This section explores reward modeling and optimization methods which are widely applicable to LLMs. The theme is the joint task of **modeling rewards** and **optimizing for the reward**: 
 
-1. 
+1. Bradley-Terry model \@ref(def:bradleyTerry): model the logits of preferences. 
+2. RLHF: use preferences to train a reward model $r(s, a)$, use PPO to optimize $r$ under KL constraint. 
+    - **Reward is single-shot**: $(s, a)=$ (prompt, response). 
+    - <span style="color:blue"> Assuming the reward model is accurately elicited & generalized, RLHF-model can perform better than demonstration. </style>
+3. DPO: reward modeling + PPO reward-maximization can be reduced to a single step: 
+    - Similar idea in [@rajeswaran2019meta]: _nested optimization can be simplified when the inner loop has suitable analytic solution_, often possible when the inner objective is proximity-constrained. 
+    - <u>Only works in single-shot reward i.e. contextual bandit assumption</u>. 
+    - DPO = reward modeling + PPO when assuming optimal PPO. 
 
 ## Preference-based reward modeling {#rewardPreference -} 
 
@@ -34,7 +41,7 @@ The reward model is trained by maximizing the likelihood of the observed prefere
 :::
 
 :::{.definition #rlhf name="RLHF"}
-The RLHF pipeline consists of three parts: 
+The RLHF pipeline consists of four parts: 
 
 1. Pretraining a large-language model. 
 2. **Supervised Fine-Tuning**: collecting expert demonstrations (prompt, behavior) and finetune the model to $\pi_{\mrm{ref}}$. 
@@ -45,11 +52,59 @@ The RLHF pipeline consists of three parts:
 \] 
 :::
 
+Note that in canonical RLHF, the state-action are **sequence-level**, not **token-level**. This simplifies the situation to a contextual bandit, instead of full-MDP, setting. In this case, we take advantage of RL since we're sampling from the sequence distribution. 
+
 ## Direct Preference Optimization {#dpo -}
 
-Recall the RLHF objective, fixing state (input) $s$, the objective maximizes 
+Recall the RLHF objective. In the **contextual bandit setting**, fixing state (prompt) $s$, the objective maximizes 
 \begin{align}
-    \EV{\tau \sim \rho^\pi} \left[
-        \sum_{t=0}^{H-1} r(s_t, a_t) - \beta D(\pi(\cdot \mid s_t)\| \pi_{\mrm{ref}}(\cdot \mid s_t)) 
+    \EEV{s\sim \mca D}{a\sim \pi_\theta(\cdot \mid s)} \left[
+        r_\phi(s, a) - \beta D(\pi(\cdot \mid s)\| \pi_{\mrm{ref}}(\cdot \mid s)) 
     \right]
 \end{align}
+This is equivalent to identifying for each context (prompt) $s$: 
+\[ 
+    \pi^*(a\mid s) = \argmax{\pi(a\mid s)} \EV{a\sim \pi_\theta(\cdot \mid s)}\left[
+        \df 1 \beta r_\phi(s, a) - D(\pi(\cdot \mid s)\| \pi_{\mrm{ref}}(\cdot \mid s)) 
+    \right]
+\] 
+The key idea for DPO is that <span color="style:blue">preference-based reward modeling + reward optimization = direct preference optimization</span> by leveraging a closed-form relation between the reward and optimal policy. 
+
+Fixing $s$, recall the [Gibbs variational principle](https://nlyu1.github.io/classical-info-theory/variational-characterizations.html#thm:donskerVaradhan). 
+\begin{align}
+    \log \mbb E_Q e^{f(X)} = \sup_P \mbb E_P f(X) - D(P\|Q) 
+\end{align}
+where the unique maximizer is the tilted distribution $P=Q^f$, where 
+\[ 
+    Q^f(dx) = e^{f(dx) - \psi_f} Q(dx), \quad \psi_f = \log \mbb E_q e^{f(X)}
+\] 
+Assuming regularity condition on $f(a) = r_\phi(s, a)$, substitute $X\mapsto a, f(a)=r_\phi(s, a), P\mapsto \pi(\cdot\mid s), Q\mapsto \pi_{\mrm{ref}}(\cdot \mid s)$ to obtain the closed-form solution 
+\[ 
+    \pi^*(a\mid s) = \df{1}{Z(s)} \exp \left[\frac 1 \beta r(s, a)\right] \pi_{\mrm{ref}}(a\mid s), \quad Z(s) = \sum_a \pi_{\mrm{ref}}(a\mid s) \exp \left[\frac 1 \beta r(s, a)\right]
+\] 
+Rearrange to rewrite the reward function in terms of policy; note that $Z(s)$ is still reward dependent, so this is an implicit equation: 
+\[ 
+    r(s, a) = \beta \left[
+        \log \df{\pi^*(a\mid s)}{\pi_{\mrm{ref}}(a\mid s)} + \log Z(s)
+    \right]
+\] 
+Under the Bradley-Terry model \@ref(def:bradleyTerry), given preference dataset $\{(s_j, a^1_j) \succ (s_j, a^2_j)\}$, the loss for the reward model can be rewritten directly in terms of the optimal policy: 
+\begin{align}
+    \mca L 
+    &= -\df 1 N \sum_j \sigma \left[
+        r(s^1_j, a^1_j) - r(s^2_j, a^2_j) 
+    \right] \\ 
+    &= -\df 1 N \sum_j \sigma\left[ \beta \log \df{\pi^*(a_1\mid s)}{\pi_{\mrm{ref}}(a_1\mid s)} - \beta \log \df{\pi^*(a_2\mid s)}{\pi_{\mrm{ref}}(a_2\mid s)}
+    \right] 
+\end{align}
+
+:::{.definition #dpoAlg name="DPO algorithm"}
+The DPO pipeline consists of four parts: 
+
+1. Pretraining a large-language model. 
+2. **Supervised Fine-Tuning**: collecting expert demonstrations (prompt, behavior) and finetune the model to $\pi_{\mrm{ref}}$. 
+3. **DPO**: collect preference dataset $\{(s_j, a^1_j) \succ (s_j, a^2_j)\}$ and maximize the DPO loss directly: 
+\[ 
+    \theta \mapsto \theta + \alpha \nabla_\theta \df 1 N \sum_j \sigma\left[ \beta \log \df{\pi^*(a_1\mid s)}{\pi_{\mrm{ref}}(a_1\mid s)} - \beta \log \df{\pi^*(a_2\mid s)}{\pi_{\mrm{ref}}(a_2\mid s)}\right]
+\] 
+:::
