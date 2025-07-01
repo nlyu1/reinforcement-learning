@@ -49,6 +49,8 @@ thm:rewardShapingTheorem
 def:linFeatureAssumption
 prp:featureMatchingLearning
 def:classicalIRL
+def:maxEntPrinciple
+def:unlabeled-div-16
 mdp
 sampling-value-based-methods
 policy-methods

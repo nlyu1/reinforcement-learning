@@ -95,7 +95,7 @@ Then any optimal policy for $M$ satisfying
 \] 
 is also optimal for $M'$. 
 
-## Reward learning {#rewardLearning -}
+## Inverse RL {#iRL -}
 
 :::{.definition #linFeatureAssumption name="linear features"}
 Assuming that we have a feature function $x:\mca S\times \mca A\to \R^n$ such that the reward is linear in features: 
@@ -138,4 +138,50 @@ Assuming $r=w^Tx$ for features $x$ given a priori:
 2. Since the optimal policy satisfies $w^T \mu_{\pi^*} \geq w^T \mu_{\pi}$, initialize $\pi$ and repeat until convergence: 
     - Optimize $w\mapsto \argmax{\|w\|_\infty \leq 1 } w^T \mu_{\pi^*} - w^T \mu_\pi$. 
     - Iterate $\pi \mapsto \argmax{\pi} w^T \mu_\pi$. 
+:::
+
+## Max-entropy IRL {#maxEntropyiRL -}
+
+One way of solving the identifiably problem is to use the principle of maximum entropy. In this section: 
+
+1. We **assume knowledge** of the dynamics model $\pi$. 
+2. Under this assumption, every policy $\pi_\theta$ induces a distribution $\rho^{\pi_\theta}$. 
+
+The probability distribution in the admissible class of constraint-compatible distributions which best represents the current state knof knowledge is the one with largest entropy. 
+
+<span style="color:blue"> In IRL setup, we wish to identify expert policy $\hat \pi^*$ from expert demonstration empirical distribution $\hat \rho = \frac 1 n \sum 1_{\tau_j}$. **Assuming a reward function**, identify a max-entropy distribution which is reward-equivalent to the empirical expert policy. 
+</span>
+
+:::{.definition #maxEntPrinciple name="principle of max entropy in IRL"}
+Assuming access to the following components: 
+
+1. Environment dynamics and a tentative reward model $r_\phi$. 
+2. Expert empirical distribution $\hat \rho = \frac 1 n \sum 1_{\tau_j}$. 
+
+The max-entropy trajectory distribution is specified by  
+\[ 
+    \rho^*_{r_\phi} = \max_\rho H(\rho) = -\sum_\tau \rho(\tau) \log \rho(\tau) 
+\] 
+subject to the following constraints: 
+
+1. Normalization: $\sum_\tau \rho(\tau) = 1$. 
+2. **Reward-equivalence** 
+\[ 
+    \EV{\tau \sim \rho}r_\phi(\tau) = \sum_\tau \rho(\tau) \, r_\phi(\tau) = \df 1 N \sum r_\phi(\tau_j) = \EV{\tau}\hat \rho(\tau)
+\] 
+:::
+
+Note that the constraints above are equivalent to maximizing entropy subject to constant ($\rho$-independent) mean of $r_\phi(\tau)$ and being a valid probability distribution. The solution is, unsurprisingly, Boltzmann with free parameter $\lambda$: 
+\[ 
+    \rho^*_{r_\phi}(\tau) = \df{e^{\lambda r_\phi(\tau)}}{Z(r_\phi, \lambda)}, \quad Z(r_\phi, \lambda) = \sum_\tau e^{\lambda r_\phi(\tau)} 
+\] 
+<u> Note that the empirical average reward does not show up here</u>. W.l.o.g. we can absorb $\lambda$ into $r_\phi$ and set $\lambda=1$. Then 
+
+\[ 
+    \max_{r_\phi} \max_{\rho \text{ s.t. } \dots} H(\rho) 
+    = \max_{r_\phi} H(\rho^*_{r_\phi}) 
+\] 
+
+:::{.definition}
+Note that the const
 :::

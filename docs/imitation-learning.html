@@ -122,7 +122,8 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="" data-path="imitation-learning.html"><a href="imitation-learning.html#imlEasy"><i class="fa fa-check"></i>Zeroth-order approaches</a></li>
 <li class="chapter" data-level="" data-path="imitation-learning.html"><a href="imitation-learning.html#rewardShaping"><i class="fa fa-check"></i>Reward shaping</a></li>
-<li class="chapter" data-level="" data-path="imitation-learning.html"><a href="imitation-learning.html#rewardLearning"><i class="fa fa-check"></i>Reward learning</a></li>
+<li class="chapter" data-level="" data-path="imitation-learning.html"><a href="imitation-learning.html#iRL"><i class="fa fa-check"></i>Inverse RL</a></li>
+<li class="chapter" data-level="" data-path="imitation-learning.html"><a href="imitation-learning.html#maxEntropyiRL"><i class="fa fa-check"></i>Max-entropy IRL</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="bibliography.html"><a href="bibliography.html"><i class="fa fa-check"></i>Bibliography</a></li>
 </ul>
@@ -239,8 +240,8 @@ Then any optimal policy for <span class="math inline">\(M\)</span> satisfying
 \]</span>
 is also optimal for <span class="math inline">\(M&#39;\)</span>.</p>
 </div>
-<div id="rewardLearning" class="section level2 unnumbered hasAnchor">
-<h2>Reward learning<a href="imitation-learning.html#rewardLearning" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="iRL" class="section level2 unnumbered hasAnchor">
+<h2>Inverse RL<a href="imitation-learning.html#iRL" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="definition">
 <p><span id="def:linFeatureAssumption" class="definition"><strong>Definition 4.4  (linear features) </strong></span>Assuming that we have a feature function <span class="math inline">\(x:\mathcal S\times \mathcal A\to \mathbb R^n\)</span> such that the reward is linear in features:
 <span class="math display">\[
@@ -282,6 +283,48 @@ Using Holder’s inequality with <span class="math inline">\(\|w\|_\infty \leq 1
 <li>Iterate <span class="math inline">\(\pi \mapsto \operatorname*{arg\,max}_{\pi} w^T \mu_\pi\)</span>.</li>
 </ul></li>
 </ol>
+</div>
+</div>
+<div id="maxEntropyiRL" class="section level2 unnumbered hasAnchor">
+<h2>Max-entropy IRL<a href="imitation-learning.html#maxEntropyiRL" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>One way of solving the identifiably problem is to use the principle of maximum entropy. In this section:</p>
+<ol style="list-style-type: decimal">
+<li>We <strong>assume knowledge</strong> of the dynamics model <span class="math inline">\(\pi\)</span>.</li>
+<li>Under this assumption, every policy <span class="math inline">\(\pi_\theta\)</span> induces a distribution <span class="math inline">\(\rho^{\pi_\theta}\)</span>.</li>
+</ol>
+<p>The probability distribution in the admissible class of constraint-compatible distributions which best represents the current state knof knowledge is the one with largest entropy.</p>
+<p><span style="color:blue"> In IRL setup, we wish to identify expert policy <span class="math inline">\(\hat \pi^*\)</span> from expert demonstration empirical distribution <span class="math inline">\(\hat \rho = \frac 1 n \sum 1_{\tau_j}\)</span>. <strong>Assuming a reward function</strong>, identify a max-entropy distribution which is reward-equivalent to the empirical expert policy.
+</span></p>
+<div class="definition">
+<p><span id="def:maxEntPrinciple" class="definition"><strong>Definition 4.6  (principle of max entropy in IRL) </strong></span>Assuming access to the following components:</p>
+<ol style="list-style-type: decimal">
+<li>Environment dynamics and a tentative reward model <span class="math inline">\(r_\phi\)</span>.</li>
+<li>Expert empirical distribution <span class="math inline">\(\hat \rho = \frac 1 n \sum 1_{\tau_j}\)</span>.</li>
+</ol>
+<p>The max-entropy trajectory distribution is specified by<br />
+<span class="math display">\[
+    \rho^*_{r_\phi} = \max_\rho H(\rho) = -\sum_\tau \rho(\tau) \log \rho(\tau)
+\]</span>
+subject to the following constraints:</p>
+<ol style="list-style-type: decimal">
+<li>Normalization: <span class="math inline">\(\sum_\tau \rho(\tau) = 1\)</span>.</li>
+<li><strong>Reward-equivalence</strong>
+<span class="math display">\[
+\mathop{\mathbb{E}}\limits_{\tau \sim \rho}r_\phi(\tau) = \sum_\tau \rho(\tau) \, r_\phi(\tau) = \dfrac 1 N \sum r_\phi(\tau_j) = \mathop{\mathbb{E}}\limits_{\tau}\hat \rho(\tau)
+\]</span></li>
+</ol>
+</div>
+<p>Note that the constraints above are equivalent to maximizing entropy subject to constant (<span class="math inline">\(\rho\)</span>-independent) mean of <span class="math inline">\(r_\phi(\tau)\)</span> and being a valid probability distribution. The solution is, unsurprisingly, Boltzmann with free parameter <span class="math inline">\(\lambda\)</span>:
+<span class="math display">\[
+    \rho^*_{r_\phi}(\tau) = \dfrac{e^{\lambda r_\phi(\tau)}}{Z(r_\phi, \lambda)}, \quad Z(r_\phi, \lambda) = \sum_\tau e^{\lambda r_\phi(\tau)}
+\]</span>
+<u> Note that the empirical average reward does not show up here</u>. W.l.o.g. we can absorb <span class="math inline">\(\lambda\)</span> into <span class="math inline">\(r_\phi\)</span> and set <span class="math inline">\(\lambda=1\)</span>. Then</p>
+<p><span class="math display">\[
+    \max_{r_\phi} \max_{\rho \text{ s.t. } \dots} H(\rho)
+    = \max_{r_\phi} H(\rho^*_{r_\phi})
+\]</span></p>
+<div class="definition">
+<p><span id="def:unlabeled-div-16" class="definition"><strong>Definition 4.7  </strong></span>Note that the const</p>
 </div>
 
 </div>
