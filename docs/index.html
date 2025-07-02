@@ -118,12 +118,12 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="" data-path="polMethods.html"><a href="polMethods.html#ppo"><i class="fa fa-check"></i>Off-policy, conservative updates</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="inverse-rl.html"><a href="inverse-rl.html"><i class="fa fa-check"></i><b>4</b> Inverse RL</a>
+<li class="chapter" data-level="4" data-path="iRL.html"><a href="iRL.html"><i class="fa fa-check"></i><b>4</b> Inverse RL</a>
 <ul>
-<li class="chapter" data-level="" data-path="inverse-rl.html"><a href="inverse-rl.html#imlEasy"><i class="fa fa-check"></i>Zeroth-order approaches</a></li>
-<li class="chapter" data-level="" data-path="inverse-rl.html"><a href="inverse-rl.html#rewardShaping"><i class="fa fa-check"></i>Reward shaping</a></li>
-<li class="chapter" data-level="" data-path="inverse-rl.html"><a href="inverse-rl.html#iRL"><i class="fa fa-check"></i>Classical inverse RL</a></li>
-<li class="chapter" data-level="" data-path="inverse-rl.html"><a href="inverse-rl.html#maxEntropyiRL"><i class="fa fa-check"></i>Max-entropy IRL</a></li>
+<li class="chapter" data-level="" data-path="iRL.html"><a href="iRL.html#imlEasy"><i class="fa fa-check"></i>Zeroth-order approaches</a></li>
+<li class="chapter" data-level="" data-path="iRL.html"><a href="iRL.html#rewardShaping"><i class="fa fa-check"></i>Reward shaping</a></li>
+<li class="chapter" data-level="" data-path="iRL.html"><a href="iRL.html#iRL"><i class="fa fa-check"></i>Classical inverse RL</a></li>
+<li class="chapter" data-level="" data-path="iRL.html"><a href="iRL.html#maxEntropyiRL"><i class="fa fa-check"></i>Max-entropy IRL</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="rlLLMs.html"><a href="rlLLMs.html"><i class="fa fa-check"></i><b>5</b> RL for LLMs</a>
 <ul>
@@ -134,6 +134,9 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html#bandits"><i class="fa fa-check"></i>Bandits</a></li>
 <li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html#lrLB"><i class="fa fa-check"></i>Lai-Robins lower bound</a></li>
+<li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html#ucb"><i class="fa fa-check"></i>UCB Bandit</a></li>
+<li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html#bayesianBandit"><i class="fa fa-check"></i>Bayesian Bandits</a></li>
+<li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html#mdpExploration"><i class="fa fa-check"></i>Exploration in MDPs</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="bibliography.html"><a href="bibliography.html"><i class="fa fa-check"></i>Bibliography</a></li>
 </ul>
@@ -189,11 +192,11 @@ div.csl-indent {
 <li>Using off-policy data: relative policy difference theorem <a href="polMethods.html#def:surrogatePG">3.7</a>.</li>
 </ul>
 <ol start="4" style="list-style-type: decimal">
-<li><a href="inverse-rl.html#iRL">Inverse RL</a> explores MDP solutions with <strong>unknown rewards</strong>, replacing them with estimates from expert demonstration; orthogonal to dynamics estimation methods.</li>
+<li><a href="iRL.html#iRL">Inverse RL</a> explores MDP solutions with <strong>unknown rewards</strong>, replacing them with estimates from expert demonstration; orthogonal to dynamics estimation methods.</li>
 </ol>
 <ul>
-<li>Main problem: identifiably problem of deducing rewards from expert policies; a partial answer is the reward shaping theorem <a href="inverse-rl.html#thm:rewardShapingTheorem">4.1</a>.</li>
-<li>Foundational result is <a href="inverse-rl.html#maxEntropyiRL">max-entropy IRL</a> which has clean closed-form optimization.</li>
+<li>Main problem: identifiably problem of deducing rewards from expert policies; a partial answer is the reward shaping theorem <a href="iRL.html#thm:rewardShapingTheorem">4.1</a>.</li>
+<li>Foundational result is <a href="iRL.html#maxEntropyiRL">max-entropy IRL</a> which has clean closed-form optimization.</li>
 </ul>
 <ol start="5" style="list-style-type: decimal">
 <li><a href="rlLLMs.html#rlLLMs">RL for LLMs</a>: eliciting rewards from preferences; direct preference optimization.</li>
@@ -206,7 +209,7 @@ div.csl-indent {
 <ul>
 <li>Proof of relative policy performance theorem is a canonical example applying large-deviation theory and <span class="math inline">\(f\)</span>-divergences.</li>
 </ul></li>
-<li><a href="inverse-rl.html#iRL">Inverse RL</a>: reward shaping theorem <a href="inverse-rl.html#thm:rewardShapingTheorem">4.1</a>, max-entropy reduction theorem <a href="inverse-rl.html#thm:maxEntReduction">4.2</a>.
+<li><a href="iRL.html#iRL">Inverse RL</a>: reward shaping theorem <a href="iRL.html#thm:rewardShapingTheorem">4.1</a>, max-entropy reduction theorem <a href="iRL.html#thm:maxEntReduction">4.2</a>.
 <ul>
 <li>Proof theme: Boltzmann methods, and interchange between single and nested optimizations.</li>
 </ul></li>

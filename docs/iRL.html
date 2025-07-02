@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>4 Inverse RL | Reinforcement Learning</title>
+  <meta name="description" content="4 Inverse RL | Reinforcement Learning" />
+  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="4 Inverse RL | Reinforcement Learning" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="4 Inverse RL | Reinforcement Learning" />
+  
+  
+  
+
+<meta name="author" content="Nicholas Lyu" />
+
+
+<meta name="date" content="2025-07-02" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="polMethods.html"/>
+<link rel="next" href="rlLLMs.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="mdp.html"><a href="mdp.html"><i class="fa fa-check"></i><b>1</b> Markov Decision Processes</a>
+<ul>
+<li class="chapter" data-level="" data-path="mdp.html"><a href="mdp.html#MDP"><i class="fa fa-check"></i>Preliminaries</a></li>
+<li class="chapter" data-level="" data-path="mdp.html"><a href="mdp.html#vFunctions"><i class="fa fa-check"></i>Value functions</a></li>
+<li class="chapter" data-level="" data-path="mdp.html"><a href="mdp.html#optimalityMDP"><i class="fa fa-check"></i>Optimality</a></li>
+<li class="chapter" data-level="" data-path="mdp.html"><a href="mdp.html#policyEval"><i class="fa fa-check"></i>Policy evaluation</a></li>
+<li class="chapter" data-level="" data-path="mdp.html"><a href="mdp.html#optimalSolutions"><i class="fa fa-check"></i>Optimal solutions</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="sampMDP.html"><a href="sampMDP.html"><i class="fa fa-check"></i><b>2</b> Sample-based MDP solutions</a>
+<ul>
+<li class="chapter" data-level="" data-path="sampMDP.html"><a href="sampMDP.html#polEval"><i class="fa fa-check"></i>Model-free policy evaluation</a></li>
+<li class="chapter" data-level="" data-path="sampMDP.html"><a href="sampMDP.html#modelFreeControl"><i class="fa fa-check"></i>Model free control</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="polMethods.html"><a href="polMethods.html"><i class="fa fa-check"></i><b>3</b> Policy Methods</a>
+<ul>
+<li class="chapter" data-level="" data-path="polMethods.html"><a href="polMethods.html#pg"><i class="fa fa-check"></i>Vanilla policy gradient</a></li>
+<li class="chapter" data-level="" data-path="polMethods.html"><a href="polMethods.html#pgReduceVar"><i class="fa fa-check"></i>Reducing variance</a>
+<ul>
+<li class="chapter" data-level="" data-path="polMethods.html"><a href="polMethods.html#pgBaseline"><i class="fa fa-check"></i>Baseline</a></li>
+<li class="chapter" data-level="" data-path="polMethods.html"><a href="polMethods.html#advEstimate"><i class="fa fa-check"></i>Generalized Advantage Estimation</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="polMethods.html"><a href="polMethods.html#ppo"><i class="fa fa-check"></i>Off-policy, conservative updates</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="iRL.html"><a href="iRL.html"><i class="fa fa-check"></i><b>4</b> Inverse RL</a>
+<ul>
+<li class="chapter" data-level="" data-path="iRL.html"><a href="iRL.html#imlEasy"><i class="fa fa-check"></i>Zeroth-order approaches</a></li>
+<li class="chapter" data-level="" data-path="iRL.html"><a href="iRL.html#rewardShaping"><i class="fa fa-check"></i>Reward shaping</a></li>
+<li class="chapter" data-level="" data-path="iRL.html"><a href="iRL.html#iRL"><i class="fa fa-check"></i>Classical inverse RL</a></li>
+<li class="chapter" data-level="" data-path="iRL.html"><a href="iRL.html#maxEntropyiRL"><i class="fa fa-check"></i>Max-entropy IRL</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="rlLLMs.html"><a href="rlLLMs.html"><i class="fa fa-check"></i><b>5</b> RL for LLMs</a>
+<ul>
+<li class="chapter" data-level="" data-path="rlLLMs.html"><a href="rlLLMs.html#rewardPreference"><i class="fa fa-check"></i>Preference-based reward modeling</a></li>
+<li class="chapter" data-level="" data-path="rlLLMs.html"><a href="rlLLMs.html#dpo"><i class="fa fa-check"></i>Direct Preference Optimization</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="exploration.html"><a href="exploration.html"><i class="fa fa-check"></i><b>6</b> Exploration</a>
+<ul>
+<li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html#bandits"><i class="fa fa-check"></i>Bandits</a></li>
+<li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html#lrLB"><i class="fa fa-check"></i>Lai-Robins lower bound</a></li>
+<li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html#ucb"><i class="fa fa-check"></i>UCB Bandit</a></li>
+<li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html#bayesianBandit"><i class="fa fa-check"></i>Bayesian Bandits</a></li>
+<li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html#mdpExploration"><i class="fa fa-check"></i>Exploration in MDPs</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="bibliography.html"><a href="bibliography.html"><i class="fa fa-check"></i>Bibliography</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Reinforcement Learning</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="iRL" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">4</span> Inverse RL<a href="iRL.html#iRL" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>In this section, we relax the assumption that the reward model is known. The task of inverse RL is to obtain good policy from expert demonstrations.</p>
+<ol style="list-style-type: decimal">
+<li>Naive approach: <strong>behavior cloning</strong> i.e. <a href="iRL.html#imlEasy">naively supervision</a> based on the expert’s behavior. Problems:
+<ol style="list-style-type: lower-alpha">
+<li>i.i.d. assumption violated due to state-distribution shifts.</li>
+<li>Can never out-perform the expert.</li>
+</ol></li>
+<li>Alternative approach: infer the reward, then optimize w.r.t. reward.
+<ul>
+<li>Bottleneck becomes (being able to best infer reward from preferences) + (optimizing given reward).</li>
+<li><u>Capable of out-performing expert, given accurate reward modeling </u> (!!!)</li>
+</ul></li>
+<li><strong>Reward shaping theorem</strong> <a href="iRL.html#thm:rewardShapingTheorem">4.1</a>: potential-based transformations <span class="math inline">\(r(s, a, s&#39;)\mapsto r(s, a, s&#39;) + \gamma \Phi(s&#39;) - \Phi(s)\)</span> is the only symmetry class <u>under all possible dynamics and baseline rewards</u>
+<ul>
+<li>Main idea: the transformation effects <span class="math inline">\(V(s) \mapsto V(s) + \Phi(s)\)</span> so the optimal policy remains invariant.</li>
+<li>Fixing <span class="math inline">\(P\)</span> and baseline <span class="math inline">\(r\)</span>, there can be more symmetry.</li>
+</ul></li>
+<li>Classical approach <a href="iRL.html#def:classicalIRL">4.5</a> elucidates <strong>adversarial</strong> iteration between:
+<ul>
+<li>Maximizing reward gap between expert reward and that of the current policy.</li>
+<li>Maximizing policy reward w.r.t. estimate.</li>
+</ul></li>
+<li>Another approach to the reward identifiably problem is to use the principle of maximum entropy (algorithm <a href="iRL.html#def:maxEntIRLAlg">4.7</a>). Assuming knowledge of the dynamics model <span class="math inline">\(P\)</span>, every policy <span class="math inline">\(\pi_\theta\)</span> induces a distribution <span class="math inline">\(\rho^{\pi_\theta}\)</span>. Each reward model <span class="math inline">\(r_\phi\)</span> induces an optimal policy <span class="math inline">\(\pi^*(r_\phi)\)</span>, which in turn induces an optimal distribution <span class="math inline">\(\rho^*_{r_\phi}\)</span> over trajectories.
+<ol style="list-style-type: lower-alpha">
+<li><span style="color:blue"> We look for a reward model <strong>whose entropy-maximizing <span class="math inline">\(\pi_\phi\)</span> induces a trajectory distribution</strong> satisfying (theorem <a href="iRL.html#thm:maxEntReduction">4.2</a>):
+<ul>
+<li>Reward-compatible with empirical expert trajectory.</li>
+<li>Has maximal entropy across <span class="math inline">\(r_\phi\)</span>. </span></li>
+</ul></li>
+<li>We break this optimization into optimizing <span class="math inline">\(r_\phi\)</span> over (maximum entropy given <span class="math inline">\(r_\phi\)</span>, and reward-compatible with empirical data); the inner optimizer is a Boltzmann distribution.</li>
+<li>It turns out that this optimization is equivalent to looking for a reward model under whose Boltzmann distribution the empirical expert trajectories are MLE: <strong>key theorem <a href="iRL.html#thm:maxEntReduction">4.2</a></strong>
+<ul>
+<li>Interestingly, the gradient looks exactly like maximizing the separation between the empirically expected reward and the expected reward under the Boltzmann distribution, echoing the classical IRL construction <a href="iRL.html#def:classicalIRL">4.5</a>.</li>
+<li>Critical assumption: the parameterization <span class="math inline">\(r_\phi\)</span> has linear degree of freedom.</li>
+</ul></li>
+</ol></li>
+</ol>
+<div id="imlEasy" class="section level2 unnumbered hasAnchor">
+<h2>Zeroth-order approaches<a href="iRL.html#imlEasy" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="definition">
+<p><span id="def:imlSetup" class="definition"><strong>Definition 4.1  (problem setup) </strong></span>In the imitation setup, we have access to:</p>
+<ul>
+<li>State and action spaces, transition model.</li>
+<li><strong>No</strong> reward model <span class="math inline">\(R\)</span>.</li>
+<li>Set of one or more teacher’s demonstrations <span class="math inline">\((s_{jt}, a_{jt})\)</span>.</li>
+</ul>
+<p>Interesting tasks include:</p>
+<ul>
+<li><strong>Behavior cloning</strong>: how to reproduce the teacher’s behavior?</li>
+<li><strong>Inverse RL</strong>: how to recover <span class="math inline">\(R\)</span>?</li>
+<li><strong>Apprenticeship learning via inverse RL</strong>: use <span class="math inline">\(R\)</span> to generate a good policy.</li>
+</ul>
+</div>
+<div class="definition">
+<p><span id="def:demoiml" class="definition"><strong>Definition 4.2  (learning from demonstrations) </strong></span>Given demonstration trajectories <span class="math inline">\((s_{tj}, a_{tj})\)</span> , train a policy with supervised learning.</p>
+</div>
+<p>One problem with behavior cloning: compounding errors. Supervised learning assumes <span class="math inline">\(s_t\sim D_{\pi^*}\)</span> i.i.d, while erroneous policies induce state distribution shift <span class="math inline">\(s_t\sim D_{\pi_\theta}\)</span> during test.</p>
+<p>A simple solution to this is called DAGGER, which iteratively asks the expert to provide feedback on the states visited by the policy.</p>
+</div>
+<div id="rewardShaping" class="section level2 unnumbered hasAnchor">
+<h2>Reward shaping<a href="iRL.html#rewardShaping" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>One immediate problem with learning the reward model is that the mapping <span class="math inline">\((R\to \pi^*)\)</span> is not unique. One solution to this problem is provided in <span class="citation">(<a href="#ref-ng1999policy">Ng, Harada, and Russell 1999</a>)</span>. In full generality, we consider additive transformations <span class="math inline">\(F(s, a, s&#39;)\)</span> of the reward function.</p>
+<div class="definition">
+<p><span id="def:unlabeled-div-15" class="definition"><strong>Definition 4.3  (potential-based shaping function) </strong></span>A reward shaping function <span class="math inline">\(F:S\times A\times R\to \mathbb R\)</span> is a potential-based shaping function if there exists a real-valued function <span class="math inline">\(\Phi:S\to \mathbb R\)</span> suhch that <span class="math inline">\(\forall s\in S-\{s_0\}\)</span>,
+<span class="math display">\[
+    F(s, a, s&#39;) = \gamma \Phi(s&#39;) - \Phi(s)
+\]</span>
+where <span class="math inline">\(S-\{s_0\}=S\)</span> if <span class="math inline">\(\gamma&lt;1\)</span>.</p>
+</div>
+<div style="color:blue">
+<p>Two remarks in order about the following theorem:</p>
+<ol style="list-style-type: decimal">
+<li>It includes scalar transformations <span class="math inline">\(r\mapsto \alpha\, r\)</span> as a special case.</li>
+<li>It uniquely identifies the symmetry group for <span class="math inline">\(r\mapsto r+F\)</span>, <u>assuming that transition <span class="math inline">\(P\)</span> can be picked arbitrarily under picking the gauge</u>. Fixing the transition <span class="math inline">\(P\)</span> and baseline <span class="math inline">\(r\)</span> a priori, there might be a larger class of symmetries.</li>
+</ol>
+</div>
+<div class="theorem">
+<p><span id="thm:rewardShapingTheorem" class="theorem"><strong>Theorem 4.1  (reward shaping theorem) </strong></span>The reward transformation <span class="math inline">\(r\mapsto r+F\)</span> preserves the optimal policy <span style="color:blue">for all transitions <span class="math inline">\(P\)</span> and baseline reward <span class="math inline">\(r\)</span></span> iff <span class="math inline">\(F\)</span> is a potential-based shaping function. In other words:</p>
+<ul>
+<li><strong>Sufficiency</strong>: if <span class="math inline">\(F\)</span> is potential-based, then every optimal policy under <span class="math inline">\(r\)</span> is an optimal policy in <span class="math inline">\(r&#39;=r+F\)</span>.</li>
+<li><strong>Necessity</strong>: if <span class="math inline">\(F\)</span> is not potential-based, then there exists transition models <span class="math inline">\(P\)</span> and reward function <span class="math inline">\(R\)</span> such that no optimal policy under <span class="math inline">\(r&#39;\)</span> is optimal under <span class="math inline">\(r\)</span>.</li>
+</ul>
+<p>Under this transformation, the value functions transform as
+<span class="math display">\[
+    Q(s, a)\mapsto Q(s, a) - \Phi(s), \quad V(s) \mapsto V(s) - \Phi(s)
+\]</span></p>
+</div>
+<details>
+<summary>
+Sufficiency: pick a transformation affecting <span class="math inline">\(V^*\mapsto V^*+\pi\)</span> which is independent of the policy
+</summary>
+</details>
+<p>Let <span class="math inline">\(M, M&#39;\)</span> denote MDPs under <span class="math inline">\(r, r&#39;=r+F\)</span> respectively. Recall for <span class="math inline">\(M^*\)</span> the Bellman optimality equations:
+<span class="math display">\[
+    Q^*_M(s, a)
+    = \mathop{\mathbb{E}}\limits_{s&#39;\sim P(\cdot\mid s, a)}\left[
+        r(s, a, s&#39;) + \gamma \max_{a&#39;\sim A} Q^*M(s&#39;, a&#39;)
+    \right]
+\]</span>
+Subtract <span class="math inline">\(\Phi(s)\)</span> from both sides:
+<span class="math display">\[\begin{align}
+    Q^*_M(s, a) - \Phi(s)
+    = \mathop{\mathbb{E}}\limits_{s&#39;\sim P(\cdot\mid s, a)}\left[
+        r(s, a, s&#39;) + \gamma\, \Phi(s&#39;) - \Phi(s) + \gamma \max_{a&#39;\sim A} \left[
+            Q^*M(s&#39;, a&#39;) - \Phi(s)
+        \right]
+    \right]
+\end{align}\]</span>
+But this is exactly the Bellman optimality equation for <span class="math inline">\(M&#39;\)</span> with solution
+<span class="math display">\[
+    Q^*_{M&#39;}(s, a) = Q^*_M(s, a) - \Phi(s)
+\]</span>
+Then any optimal policy for <span class="math inline">\(M\)</span> satisfying
+<span class="math display">\[
+    \pi^* = \operatorname*{arg\,max}_{\pi} V^*_M(s_0) =  \operatorname*{arg\,max}_{\pi} V^*_M(s_0) - \Phi(s_0) = \operatorname*{arg\,max}_{\pi} V^*_{M&#39;}(s_0) - \Phi(s_0)
+\]</span>
+is also optimal for <span class="math inline">\(M&#39;\)</span>.</p>
+</div>
+<div id="iRL" class="section level2 unnumbered hasAnchor">
+<h2>Classical inverse RL<a href="iRL.html#iRL" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="definition">
+<p><span id="def:linFeatureAssumption" class="definition"><strong>Definition 4.4  (linear features) </strong></span>Assuming that we have a feature function <span class="math inline">\(x:\mathcal S\times \mathcal A\to \mathbb R^n\)</span> such that the reward is linear in features:
+<span class="math display">\[
+    r(s, a) = w^T x(s, a), \quad w\in \mathbb R^n\text{   and  } \|w_\infty\|_\leq 1
+\]</span>
+Fixing features a priori, the goal of reward learning will be to identify the weight vector <span class="math inline">\(w\)</span> given a set of demonstrations.</p>
+</div>
+<div class="proposition">
+<p><span id="prp:featureMatchingLearning" class="proposition"><strong>Proposition 4.1  (optimal-policy learning ≈ feature matching) </strong></span>Given features <span class="math inline">\(x\)</span> satisfying assumptions <a href="iRL.html#def:linFeatureAssumption">4.4</a> and policy <span class="math inline">\(\pi\)</span>, define the <strong>expected discounted feature</strong> <span class="math inline">\(\mu_\pi: \mathbb R^n\)</span> by
+<span class="math display">\[
+    \mu_\pi =  \mathop{\mathbb{E}}\limits_{\pi} \left[
+        \sum_{t=0}^\infty \gamma^t x(s_t, a_t)\mid s_0
+    \right]
+\]</span>
+Assuming that <span class="math inline">\(r=w^Tx\)</span>, then
+<span class="math display">\[
+    \|\mu_\pi - \mu_{\pi^*}\|_1\leq \epsilon \implies V^*(s_0) - V^\pi(s_0) \leq \epsilon
+\]</span></p>
+</div>
+<p>Unrolling the linear reward function, <span class="math inline">\(V^\pi\)</span> can be rewritten as
+<span class="math display">\[
+    V^\pi(s_0) = \mathop{\mathbb{E}}\limits_{\pi} \left[
+        \sum_{t=0}^\infty \gamma^t w^T r(s_t, a_t)\mid s_0
+    \right]
+    = w^T \mu_\pi
+\]</span>
+Using Holder’s inequality with <span class="math inline">\(\|w\|_\infty \leq 1\)</span>, we obtain
+<span class="math display">\[
+    \|\mu_\pi - \mu_{\pi^*}\|_1\leq \epsilon \implies
+    |w^T\mu_\pi - w^T \mu_{\pi^*}| \leq \epsilon
+\]</span></p>
+<div class="definition">
+<p><span id="def:classicalIRL" class="definition"><strong>Definition 4.5  (classical IRL algorithm) </strong></span>Assuming <span class="math inline">\(r=w^Tx\)</span> for features <span class="math inline">\(x\)</span> given a priori:</p>
+<ol style="list-style-type: decimal">
+<li>Compute the optimal demonstration’s discounted mean features <span class="math inline">\(\mu_{\pi^*}\)</span> from demonstration (proposition <a href="iRL.html#prp:featureMatchingLearning">4.1</a>).</li>
+<li>Since the optimal policy satisfies <span class="math inline">\(w^T \mu_{\pi^*} \geq w^T \mu_{\pi}\)</span>, initialize <span class="math inline">\(\pi\)</span> and repeat until convergence:
+<ul>
+<li>Optimize <span class="math inline">\(w\mapsto \operatorname*{arg\,max}_{\|w\|_\infty \leq 1 } w^T \mu_{\pi^*} - w^T \mu_\pi\)</span>.</li>
+<li>Iterate <span class="math inline">\(\pi \mapsto \operatorname*{arg\,max}_{\pi} w^T \mu_\pi\)</span>.</li>
+</ul></li>
+</ol>
+</div>
+</div>
+<div id="maxEntropyiRL" class="section level2 unnumbered hasAnchor">
+<h2>Max-entropy IRL<a href="iRL.html#maxEntropyiRL" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We develop the inverse RL framework below assuming the dynamics is known. See <span class="citation">(<a href="#ref-finn2016guided">Finn, Levine, and Abbeel 2016</a>)</span> for a fitted version.</p>
+<div class="definition">
+<p><span id="def:maxEntPrinciple" class="definition"><strong>Definition 4.6  (principle of max entropy in IRL) </strong></span>Assuming access to the following components:</p>
+<ol style="list-style-type: decimal">
+<li>Environment dynamics <span class="math inline">\(P\)</span>.<br />
+</li>
+<li>Expert empirical distribution <span class="math inline">\(\hat \rho = \frac 1 n \sum 1_{\tau_j}\)</span>.</li>
+</ol>
+<p><strong>Given a reward model <span class="math inline">\(r_\phi\)</span></strong>, the max-entropy trajectory distribution compatible with <span class="math inline">\(r_\phi\)</span> and the expert trajectories is specified by<br />
+<span class="math display">\[
+    \rho^*_{r_\phi} = \max_\rho H(\rho) = -\sum_\tau \rho(\tau) \log \rho(\tau)
+\]</span>
+subject to the following constraints:</p>
+<ol style="list-style-type: decimal">
+<li>Normalization: <span class="math inline">\(\sum_\tau \rho(\tau) = 1\)</span>.</li>
+<li><strong>Reward-equivalence</strong> let <span class="math inline">\(\hat r_\phi = \dfrac 1 N \sum r_\phi(\tau_j) = \mathop{\mathbb{E}}\limits_{\hat \rho} r_\phi(\tau) \in \mathbb R\)</span> denote the expert reward under this reward model:
+<span class="math display">\[
+\mathop{\mathbb{E}}\limits_{\tau \sim \rho}r_\phi(\tau) = \sum_\tau \rho(\tau) \, r_\phi(\tau) = \hat r_\phi
+\]</span></li>
+</ol>
+</div>
+<div class="theorem">
+<p><span id="thm:maxEntReduction" class="theorem"><strong>Theorem 4.2  (max-entropy reduction) </strong></span></p>
+Let <span class="math inline">\(B_{r_\phi: \tau \mapsto \mathbb R, \lambda\in R}\)</span> denote the Boltzmann distribution
+<span class="math display">\[
+    B_{r_\phi, \lambda} = \dfrac{e^{\lambda \, r_\phi(\tau)}}{Z(r_\phi, \lambda)}, \quad Z(r_\phi, \lambda) = \sum_\tau e^{\lambda r_\phi(\tau)}
+\]</span>
+Further assume that <span class="math inline">\(r_\phi\)</span> has <u>linear degree of freedom</u> i.e. 
+<span class="math display">\[
+    \max_{r_\phi} \max_\lambda f(\lambda r_\phi) = \max_{r_\phi} f(r_\phi)
+\]</span>
+<div style="color:blue">
+<p>Then the <span class="math inline">\(r_\phi\)</span> (maximizing entropy over all distribution <span class="math inline">\(\rho\)</span> which is <span class="math inline">\(r_\phi\)</span>-reward compatible with <span class="math inline">\(\hat \rho\)</span>) is equal to the one (maximizing likelihood of <span class="math inline">\(\hat \rho\)</span> under Boltzmann distribution parameterized by <span class="math inline">\(r_\phi\)</span>):</p>
+<p><span class="math display">\[\begin{align}
+    \operatorname*{arg\,max}_{r_\phi}\left[
+        \max_{\text{distribution }\rho} H(\rho) \quad \text{s.t.  } \mathop{\mathbb{E}}\limits_{\rho} r_\phi(\tau) = \bar r(r_\phi)
+    \right] = \operatorname*{arg\,max}_{r_\phi} -D(\hat \rho \| B_{r_\phi, \lambda=1})
+\end{align}\]</span></p>
+<p>The gradient of the RHS w.r.t <span class="math inline">\(\phi\)</span> is
+<span class="math display">\[\begin{align}
+    \nabla_\phi \dfrac 1 N \sum \log B_{r_\phi, \lambda=1}(\tau_j)
+    &amp;= \nabla_\phi \left[
+        -\log Z_{r_\phi, \lambda=1} + \dfrac 1 N \sum r_\phi(\tau_j)
+    \right] \\
+    &amp;= \mathop{\mathbb{E}}\limits_{\hat \rho}\left[\nabla_\phi r_\phi(\tau)\right] - \mathop{\mathbb{E}}\limits_{B_{r_\phi, \lambda}} \left[\nabla_\phi r_\phi(\tau)\right]
+\end{align}\]</span></p>
+</div>
+</div>
+<details>
+<summary>
+Proof idea: invoke Boltzmann lemma below for LHS. On RHS, expand and apply the linear degree of freedom to write <span class="math inline">\(\operatorname*{arg\,max}_{r_\phi}=\operatorname*{arg\,max}_{r_\phi}\max_\lambda\)</span>; the inner <span class="math inline">\(\max_\lambda\)</span> reduces to the average-reward constraint on <span class="math inline">\(\lambda\)</span>
+</summary>
+<div class="lemma">
+<p><span id="lem:unlabeled-div-16" class="lemma"><strong>Lemma 4.1  (Boltzmann solution) </strong></span>The constrained maximum
+<span class="math display">\[
+    \left[\max_{\text{distribution }\rho} H(\rho) \quad \text{s.t.  } \mathop{\mathbb{E}}\limits_{\rho} r_\phi(\tau) = \bar r(r_\phi)\right]\,\, = \log Z_{r_\phi, \lambda} + \lambda \bar r(r_\phi)
+\]</span>
+The distribution achieving the maximum is Boltzmann <span class="math inline">\(\rho^* = B(r_\phi, \lambda)\)</span>, where the free parameter <span class="math inline">\(\lambda\)</span> satisfies <span class="math inline">\(\mathop{\mathbb{E}}\limits_{B_{r_\phi, \lambda}} r_\phi(\tau) = \bar r(r_\phi)\)</span>.</p>
+</div>
+<details>
+<summary>
+Proof
+</summary>
+Introducing two Lagrangian multipliers <span class="math inline">\(\lambda, \lambda_p\)</span>: the equations <span class="math inline">\(\partial_{\lambda }\mathcal L=\partial_{\lambda_p} \mathcal L = 0\)</span> enforces the two constraints, respectively:
+<span class="math display">\[\begin{align}
+    \mathcal L &amp;= - \sum_\tau \rho(\tau) \log \rho(\tau) - \lambda \left(\bar r(r_\phi) - \sum_\tau \rho(\tau) r_\phi(\tau) \right) + \lambda_p \sum_\tau \rho(\tau) \\
+    \partial_{\rho(\tau)} \mathcal L
+    &amp;= -\log \rho(\tau) + 1 + \lambda r_\phi(\tau) + \lambda_p = 0 \\
+    \log \rho(\tau) &amp;= 1 + \lambda r_\phi(\tau) + \lambda_p \implies \rho^*(\tau) \propto e^{\lambda r_\phi(\tau)}
+\end{align}\]</span>
+Proceding to calculate the entropy of this distribution:
+<span class="math display">\[\begin{align}
+    H(\rho^*)
+    &amp;= \sum_\tau \rho^*(\tau) \log \dfrac{Z_{r_\phi, \lambda}}{e^{\lambda\, r_\phi(\tau)}} = \sum_\tau \rho^*(\tau) \left[
+    \log Z - \lambda r_\phi(\tau)
+    \right]  \\
+    &amp;= \log Z_{r_\phi, \lambda} + \lambda \mathop{\mathbb{E}}\limits_{\rho^*} r_\phi(\tau) = \log Z_{r_\phi, \lambda} + \lambda \bar r(r_\phi)
+\end{align}\]</span>
+</details>
+Applying the lemma above, the LHS reduces to
+<span class="math display">\[
+    \operatorname*{arg\,max}_{r_\phi}\left[
+        Z_{r_\phi, \lambda} + \lambda r(r_\phi) \quad \text{s.t.  } \mathop{\mathbb{E}}\limits_{\tau \sim B_{r_\phi, \lambda}} r_\phi(\tau) = \bar r(r_\phi)
+    \right]
+\]</span>
+Expand the likelihood extremization on the RHS:
+<span class="math display">\[\begin{aligned}
+    \operatorname*{arg\,max}_{r_\phi}
+    -D(\hat \rho \| B_{r_\phi, \lambda=1})
+    &amp;= \operatorname*{arg\,max}_{r_\phi} \dfrac 1 N \sum_\tau \hat \rho(\tau) \log \dfrac{B_{r_\phi, \lambda=1}(\tau)}{\hat \rho(\tau)} \\
+    &amp;= \operatorname*{arg\,max}_{r_\phi} \dfrac 1 N \sum_j \log B_{r_\phi, \lambda=1}(\tau_j) \\
+    &amp;= \operatorname*{arg\,max}_{r_\phi} \left(\sum_j \lambda_{=1} r_\phi(\tau_j)\right) + \log Z_{r_\phi, \lambda=1} \\
+    &amp;= \operatorname*{arg\,max}_{r_\phi} \left[ \lambda_{=1} \bar r(r_\phi) + \log Z_{r_\phi, \lambda=1}\right]
+\end{aligned}\]</span>
+Recall that <span class="math inline">\(r_\phi\)</span> has linear degree of freedom, so we can split the <span class="math inline">\(\operatorname*{arg\,max}_{r_\phi}\)</span>; the inner <span class="math inline">\(\max\)</span> is maximized when <span class="math inline">\(\lambda\)</span> satisfies <span class="math inline">\(\mathop{\mathbb{E}}\limits_{B_{r_\phi, \lambda}}r_\phi(\tau) = \bar r(r_\phi)\)</span> (this can be seen by another application of Lagrange multipliers, or by recognizing the Legendre transform), so the RHS reduces to LHS:
+<span class="math display">\[\begin{aligned}
+    \operatorname*{arg\,max}_{r_\phi} \left[ \lambda_{=1} \bar r(r_\phi) + \log Z_{r_\phi, \lambda}\right]  
+    &amp;= \operatorname*{arg\,max}_{r_\phi} \max_\lambda \left[ \lambda \bar r(r_\phi) + \log Z_{r_\phi, \lambda}\right]  \\
+    &amp;= \operatorname*{arg\,max}_{r_\phi}\left[
+        \log Z_{r_\phi, \lambda} + \lambda r(r_\phi) \quad \text{s.t.  } \mathop{\mathbb{E}}\limits_{\tau \sim B_{r_\phi, \lambda}} r_\phi(\tau) = \bar r(r_\phi)
+    \right]
+\end{aligned}\]</span>
+</details>
+<p>Salient points:</p>
+<ol style="list-style-type: decimal">
+<li>When <span class="math inline">\(r_\phi\)</span> does not have linear degree of freedom, maximizing likelihood of the empirical distribution under <span class="math inline">\(r_\phi\)</span>-parameterized Boltzmann distribution <strong>is not</strong> equivalent to maximizing the maximum reward-compatible distribution entropy.</li>
+<li>Given a Boltzmann distribution of trajectories, the maximum-entropy optimal policy is <span class="math inline">\(\pi_\phi(a\mid s) \propto \exp Q^*(s, a)\)</span>, where <span class="math inline">\(Q^*\)</span> solves MDP with reward <span class="math inline">\(r_\phi\)</span>.</li>
+</ol>
+<div class="definition">
+<p><span id="def:maxEntIRLAlg" class="definition"><strong>Definition 4.7  (max-entropy IRL Algorithm) </strong></span>Given dynamics model <span class="math inline">\(P\)</span> and expert demonstration <span class="math inline">\(\hat \rho \sim \{\hat \tau_j\}\)</span>, initialize scale-invariant <span class="math inline">\(r_\phi\)</span> and repeat until convergence:</p>
+<ol style="list-style-type: decimal">
+<li>Given <span class="math inline">\(r_\phi\)</span>, use value interation to compute <span class="math inline">\(Q^*(s, a)\)</span>. The max-entropy optimal policy is then <span class="math inline">\(\pi_\phi(a\mid s) \propto \exp Q^*(s, a)\)</span>.<br />
+</li>
+<li>Update <span class="math inline">\(\phi\)</span> in the direction of <span class="math inline">\(-\nabla_\phi D(\hat \rho \|B_{r_\phi, \lambda=1}) = \mathop{\mathbb{E}}\limits_{\hat \rho}\left[\nabla_\phi r_\phi(\tau)\right] - \mathop{\mathbb{E}}\limits_{B_{r_\phi, \lambda}} \left[\nabla_\phi r_\phi(\tau)\right]\)</span>.</li>
+</ol>
+</div>
+
+</div>
+</div>
+<h3>Bibliography<a href="bibliography.html#bibliography" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-finn2016guided" class="csl-entry">
+Finn, Chelsea, Sergey Levine, and Pieter Abbeel. 2016. <span>“Guided Cost Learning: Deep Inverse Optimal Control via Policy Optimization.”</span> In <em>International Conference on Machine Learning</em>, 49–58. PMLR.
+</div>
+<div id="ref-ng1999policy" class="csl-entry">
+Ng, Andrew Y, Daishi Harada, and Stuart Russell. 1999. <span>“Policy Invariance Under Reward Transformations: Theory and Application to Reward Shaping.”</span> In <em>Icml</em>, 99:278–87. Citeseer.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="polMethods.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="rlLLMs.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

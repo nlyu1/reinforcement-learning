@@ -64,6 +64,6 @@ thm:regretLowerBound
 mdp
 sampMDP
 polMethods
-inverse-rl
+iRL
 rlLLMs
 exploration

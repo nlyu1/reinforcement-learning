@@ -109,3 +109,9 @@ The largest choice of $n_t$ which keeps the whole bound $o(1)$ is
     \mbb E_P[N_a(t)] \geq n_t (1 - o(1)) 
 \] 
 Take $\epsilon\to 0$; also note that by chain rule, $D(P\|P') = \mbb E_P[N_a(t)] D(\mca R^a \|\tilde {\mca R}^a) \geq D(\mca R^a \|\tilde {\mca R}^a)$. Take $\tilde {\mca R^a}\to \mca R^{a^*}$ and substituting into the regret formula yields the desired bound. 
+
+## UCB Bandit {#ucb -}
+
+## Bayesian Bandits {#bayesianBandit -} 
+
+## Exploration in MDPs {#mdpExploration -}
