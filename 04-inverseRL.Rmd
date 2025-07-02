@@ -1,4 +1,4 @@
-# Inverse RL 
+# Inverse RL {#iRL}
 
 In this section, we relax the assumption that the reward model is known. The task of inverse RL is to obtain good policy from expert demonstrations. 
 
