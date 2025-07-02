@@ -108,7 +108,7 @@ Then any optimal policy for $M$ satisfying
 \] 
 is also optimal for $M'$. 
 
-## Classical inverse RL {#iRL -}
+## Classical inverse RL {#iRLClassical -}
 
 :::{.definition #linFeatureAssumption name="linear features"}
 Assuming that we have a feature function $x:\mca S\times \mca A\to \R^n$ such that the reward is linear in features: 
