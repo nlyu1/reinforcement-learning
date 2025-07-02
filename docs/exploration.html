@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>6 Exploration | Reinforcement Learning</title>
   <meta name="description" content="6 Exploration | Reinforcement Learning" />
-  <meta name="generator" content="bookdown 0.39 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
   <meta property="og:title" content="6 Exploration | Reinforcement Learning" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Nicholas Lyu" />
 
 
-<meta name="date" content="2025-07-01" />
+<meta name="date" content="2025-07-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -64,7 +64,6 @@
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
-  margin-bottom: 0em;
 }
 .hanging div.csl-entry {
   margin-left:2em;
@@ -134,6 +133,7 @@ div.csl-indent {
 <li class="chapter" data-level="6" data-path="exploration.html"><a href="exploration.html"><i class="fa fa-check"></i><b>6</b> Exploration</a>
 <ul>
 <li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html#bandits"><i class="fa fa-check"></i>Bandits</a></li>
+<li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html#lrLB"><i class="fa fa-check"></i>Lai-Robins lower bound</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="bibliography.html"><a href="bibliography.html"><i class="fa fa-check"></i>Bibliography</a></li>
 </ul>
@@ -155,10 +155,13 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="exploration" class="section level1 hasAnchor" number="6">
 <h1><span class="header-section-number">6</span> Exploration<a href="exploration.html#exploration" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<ol style="list-style-type: decimal">
+<li>Lai-Robbins lower bound (theorem <a href="exploration.html#thm:regretLowerBound">6.1</a>): regret grows at least as <span class="math inline">\(\log t\)</span>. <span style="color:blue">This is an exemplary proof using deviations theory.</span></li>
+</ol>
 <div id="bandits" class="section level2 unnumbered hasAnchor">
 <h2>Bandits<a href="exploration.html#bandits" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="definition">
-<p><span id="def:multiArmBandit" class="definition"><strong>Definition 6.1  (multiarmed bandits) </strong></span>A multi-armed bandit consists of a known set of <span class="math inline">\(m\)</span> actions, R^a(r)=P(ra)$ an unknown yet stationary distribution over rewards. At each step, the agent selects action <span class="math inline">\(a_t\in \mathcal A\)</span> and the environment generates a reward. The goal is the maximize the cumulative reward <span class="math inline">\(\sum_{\tau=1}^t r_\tau\)</span>.</p>
+<p><span id="def:multiArmBandit" class="definition"><strong>Definition 6.1  (multiarmed bandits) </strong></span>A multi-armed bandit consists of a known set of <span class="math inline">\(m\)</span> actions, <span class="math inline">\(\mathcal R^a(r)=\mathbb P(r\mid a)\)</span> an unknown yet stationary distribution over rewards. At each step, the agent selects action <span class="math inline">\(a_t\in \mathcal A\)</span> and the environment generates a reward. The goal is the maximize the cumulative reward <span class="math inline">\(\sum_{\tau=1}^t r_\tau\)</span>.</p>
 </div>
 <div class="definition">
 <p><span id="def:unlabeled-div-18" class="definition"><strong>Definition 6.2  (regret) </strong></span>Consider the following definitions; note that recall is a statistical average definition, and that minimizing regret = maximizing expected cumulative reward.</p>
@@ -166,8 +169,102 @@ div.csl-indent {
 <li><strong>Action-value</strong> <span class="math inline">\(Q(a)=\mathbb E[r\mid a]\)</span> denotes the mean reward for action <span class="math inline">\(a\)</span>.</li>
 <li><strong>Optimal value</strong> <span class="math inline">\(V^* = Q(a^*) = \max_a Q(a)\)</span></li>
 <li><strong>Regret</strong> is the opportunity loss for one step <span class="math inline">\(I_t = \mathbb E[V^* - Q(a_t)]\)</span>.</li>
+<li><strong>Cumulative regret</strong> <span class="math inline">\(L_t = \sum_{\tau \leq t} I_\tau\)</span>.</li>
+</ul>
+<p>Some auxiliary definitions:</p>
+<ul>
+<li>Average payoff <span class="math inline">\(\mu_a = \mathbb E_{\mathcal R^a}(r)\)</span>.</li>
+<li><strong>Gap</strong> <span class="math inline">\(\Delta_a = \mu_{a^*} - \mu_a&gt;0\)</span> for each sub-optimal arm.</li>
+<li><strong>Pull counts</strong> <span class="math inline">\(N_a(t)\)</span>. Under this definition, we have cumulative regret
+<span class="math display">\[
+  L_t = \sum_a \Delta_a \cdot \mathbb E\left[N_a(t)\right]
+\]</span></li>
 </ul>
 </div>
+</div>
+<div id="lrLB" class="section level2 unnumbered hasAnchor">
+<h2>Lai-Robins lower bound<a href="exploration.html#lrLB" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="remark">
+<p><span id="lrLB" class="remark"><em>Remark</em> (proof strategy). </span>Proof for the following theorem is adapted from <a href="https://appliedprobability.blog/2020/11/25/lai-robbins-lower-bound/">appliedprobability.blog</a>. It is an exemplary proof from large deviations theory:</p>
+<ol style="list-style-type: decimal">
+<li>Fixing a suboptimal arm <span class="math inline">\(a\)</span> and bound sequence <span class="math inline">\(n_t\)</span>, we wish to prove <span class="math inline">\(P(N_a(t) \leq n_t) = o(1)\)</span></li>
+<li>Construct an alternate measure <span class="math inline">\(P&#39;\)</span> under which <span class="math inline">\(E_t=\{N_a(t) \leq n_t\}\)</span> is <span class="math inline">\(P\)</span>-likely yet <span class="math inline">\(P&#39;\)</span>-unlikely.</li>
+<li><span style="color:blue"><strong>Key reduction</strong>: let <span class="math inline">\(C_t\)</span> denote the event that <u>empirical KL is <span class="math inline">\(\epsilon\)</span>-close to true KL</u>, then
+<span class="math display">\[
+P(E_t) = P(E_t \cap \overline{C_t}) + P(E_t \cap C_t)
+\]</span>
+<ul>
+<li>The first term is <span class="math inline">\(o(1)\)</span> by WLLN.</li>
+<li>The second term can be converted to a <span class="math inline">\(P&#39;(E_t\cap C_t)\)</span> by Radon-Nikodym derivative, which is bounded by <span class="math inline">\(C_t\)</span> assumption.
+</span></li>
+</ul></li>
+</ol>
+</div>
+<div class="theorem">
+<p><span id="thm:regretLowerBound" class="theorem"><strong>Theorem 6.1  (Lai-Robbins lower bound) </strong></span>For any algorithm such that the number of suboptimal pulls is <span class="math inline">\(o(t^{\eta\in (0, 1)})\)</span>, we have
+<span class="math display">\[\begin{align}
+    L_t = \sum_{a\neq a^*} \dfrac{1-\eta}{D(\mathcal R^a \| \mathcal R^{a^*})} \Delta_a \log t
+\end{align}\]</span></p>
+</div>
+<p>Fixing any suboptimal arm <span class="math inline">\(a\)</span>, construct a new bandit instance in which <span class="math inline">\(a\)</span> is optimal, i.e. <span class="math inline">\(\tilde {\mathcal R}^a\)</span> satisfies <span class="math inline">\(\mathbb E[\tilde {\mathcal R}^a] &gt; \mu_{a^*}\)</span>. Let the original measure be denoted <span class="math inline">\(P\)</span> and the new measure <span class="math inline">\(P&#39;\)</span>. Fix a bound sequence <span class="math inline">\(n_t\)</span>.
+<span class="math display">\[\begin{align}
+    \mathbb E_P[N_a(t)]
+    &amp;\geq n_t \left(1 - P[N_a(t) \leq n_t]\right)
+\end{align}\]</span>
+We seek to choose <span class="math inline">\(n_t\)</span> such that <span class="math inline">\(P[N_a(t) \geq n_t]=o(1)\)</span>. Upper-bound this term by splitting it into two cases:</p>
+<ul>
+<li>The first case denotes the probability that the deviation between <span class="math inline">\(P\)</span> and <span class="math inline">\(P&#39;\)</span> is not close to that given by KL. goes to <span class="math inline">\(\delta_t = o(1)\)</span> by weak law of large numbers.</li>
+<li>The second case isolates a case where the deviation between <span class="math inline">\(P, P&#39;\)</span> is <span class="math inline">\(\epsilon\)</span>-close to that given by KL.</li>
+</ul>
+<p>Note that conditioning on actions, the bandit environment tensorizes; let <span class="math inline">\(D(r_k)=\log \dfrac{P&#39;(r_k)}{P(r_k)}\)</span> denote the random variable such that <span class="math inline">\(\mathbb E[e^D] = dP&#39;/dP\)</span> and <span class="math inline">\(\mathbb E[D] = D(P&#39;\|P)\)</span>, then
+<span class="math display">\[\begin{align}
+    P[N_a(t) \leq n_t]
+    &amp;= P\left[
+        N_a(t) \leq n_t \text{   and   }
+        \left|
+            D(P\|P&#39;) - \dfrac 1 {n_t} \sum_{k=1}^{n_t} D(r_k)
+        \right| &gt; \epsilon
+    \right] \\
+    &amp;\quad + P\left[
+        N_a(t) \leq n_t \text{   and   }
+        \left|
+            D(P\|P&#39;) - \dfrac 1 {n_t} \sum_{k=1}^{n_t} D(r_k)
+        \right| \leq \epsilon
+    \right] \\
+    &amp;\leq P\left[
+       \left|
+            D(P\|P&#39;) - \dfrac 1 {n_t} \sum_{k=1}^{n_t} D(r_k)
+        \right| &gt; \epsilon
+    \right] \\
+    &amp;\quad + \mathbb E_{P&#39;}\left[
+        \exp \left(
+            \sum_{k=1}^{n_t} D(r_k)
+        \right)_{\leq n_t [D(P\|P&#39;)+\epsilon]} P&#39; \left[
+        N_a(t) \leq n_t
+        \right]
+    \right] \\
+    &amp;\leq \delta_t + \exp \left(
+        n_t [D(P\|P&#39;) + \epsilon]
+    \right) P&#39;[N_a(t) \leq n_t]
+\end{align}\]</span></p>
+<p>It remains to bound <span class="math inline">\(P&#39;[N_a(t) \leq n_t]\)</span> by Markov’s inequality and choose <span class="math inline">\(n_t\)</span>: w.l.o.g suppose that the algorithm pulls the suboptimal arm at rate <span class="math inline">\(o(t^\eta)\)</span> for <span class="math inline">\(\eta\in (0, 1)\)</span>, we have
+<span class="math display">\[
+    P&#39;[N_a(t) \leq n_t] = P&#39;(t - N_a(t) \geq t - n_T)
+    \leq \dfrac{\mathbb E_{P&#39;}[t - N_a(t)]}{t-n_t} = o(t^{\eta - 1})
+\]</span>
+Substituting, we obtain the bound on
+<span class="math display">\[\begin{align}
+    P&#39;[N_a(t) \leq n_t]
+    &amp;\leq \delta_t + \exp \left(
+        n_t [D(P\|P&#39;) + \epsilon]
+    \right) o(t^{\eta - 1})
+\end{align}\]</span>
+The largest choice of <span class="math inline">\(n_t\)</span> which keeps the whole bound <span class="math inline">\(o(1)\)</span> is
+<span class="math display">\[
+    n_t = \dfrac{1-\eta}{D(P\|P&#39;) + \epsilon} \log t, \quad
+    \mathbb E_P[N_a(t)] \geq n_t (1 - o(1))
+\]</span>
+Take <span class="math inline">\(\epsilon\to 0\)</span>; also note that by chain rule, <span class="math inline">\(D(P\|P&#39;) = \mathbb E_P[N_a(t)] D(\mathcal R^a \|\tilde {\mathcal R}^a) \geq D(\mathcal R^a \|\tilde {\mathcal R}^a)\)</span>. Take <span class="math inline">\(\tilde {\mathcal R^a}\to \mathcal R^{a^*}\)</span> and substituting into the regret formula yields the desired bound.</p>
 
 </div>
 </div>

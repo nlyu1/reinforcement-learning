@@ -60,6 +60,7 @@ def:rlhf
 def:dpoAlg
 def:multiArmBandit
 def:unlabeled-div-18
+thm:regretLowerBound
 mdp
 sampMDP
 polMethods

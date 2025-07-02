@@ -1,9 +1,11 @@
 # Exploration
 
+1. Lai-Robbins lower bound (theorem \@ref(thm:regretLowerBound)): regret grows at least as $\log t$. <span style="color:blue">This is an exemplary proof using deviations theory.</span>
+
 ## Bandits {#bandits -}
 
 :::{.definition #multiArmBandit name="multiarmed bandits"}
-A multi-armed bandit consists of a known set of $m$ actions, \mca R^a(r)=\mbb P(r\mid a)$ an unknown yet stationary distribution over rewards. At each step, the agent selects action $a_t\in \mca A$ and the environment generates a reward. The goal is the maximize the cumulative reward $\sum_{\tau=1}^t r_\tau$. 
+A multi-armed bandit consists of a known set of $m$ actions, $\mca R^a(r)=\mbb P(r\mid a)$ an unknown yet stationary distribution over rewards. At each step, the agent selects action $a_t\in \mca A$ and the environment generates a reward. The goal is the maximize the cumulative reward $\sum_{\tau=1}^t r_\tau$. 
 :::
 
 :::{.definition name="regret"}
@@ -12,4 +14,98 @@ Consider the following definitions; note that recall is a statistical average de
 - **Action-value** $Q(a)=\mbb E[r\mid a]$ denotes the mean reward for action $a$. 
 - **Optimal value** $V^* = Q(a^*) = \max_a Q(a)$
 - **Regret** is the opportunity loss for one step $I_t = \mbb E[V^* - Q(a_t)]$. 
+- **Cumulative regret** $L_t = \sum_{\tau \leq t} I_\tau$. 
+
+Some auxiliary definitions: 
+
+- Average payoff $\mu_a = \mbb E_{\mca R^a}(r)$. 
+- **Gap** $\Delta_a = \mu_{a^*} - \mu_a>0$ for each sub-optimal arm. 
+- **Pull counts** $N_a(t)$. Under this definition, we have cumulative regret 
+\[ 
+    L_t = \sum_a \Delta_a \cdot \mbb E\left[N_a(t)\right]
+\] 
 :::
+
+## Lai-Robins lower bound {#lrLB -} 
+
+:::{.remark #lrLB name="proof strategy"}
+Proof for the following theorem is adapted from [appliedprobability.blog](https://appliedprobability.blog/2020/11/25/lai-robbins-lower-bound/). It is an exemplary proof from large deviations theory: 
+
+1. Fixing a suboptimal arm $a$ and bound sequence $n_t$, we wish to prove $P(N_a(t) \leq n_t) = o(1)$ 
+2. Construct an alternate measure $P'$ under which $E_t=\{N_a(t) \leq n_t\}$ is $P$-likely yet $P'$-unlikely. 
+3. <span style="color:blue">**Key reduction**: let $C_t$ denote the event that <u>empirical KL is $\epsilon$-close to true KL</u>, then 
+\[ 
+    P(E_t) = P(E_t \cap \overline{C_t}) + P(E_t \cap C_t)
+\] 
+    - The first term is $o(1)$ by WLLN. 
+    - The second term can be converted to a $P'(E_t\cap C_t)$ by Radon-Nikodym derivative, which is bounded by $C_t$ assumption. 
+</span>
+:::
+
+:::{.theorem #regretLowerBound name="Lai-Robbins lower bound"}
+For any algorithm such that the number of suboptimal pulls is $o(t^{\eta\in (0, 1)})$, we have 
+\begin{align}
+    L_t = \sum_{a\neq a^*} \df{1-\eta}{D(\mca R^a \| \mca R^{a^*})} \Delta_a \log t
+\end{align}
+:::
+
+Fixing any suboptimal arm $a$, construct a new bandit instance in which $a$ is optimal, i.e. $\tilde {\mca R}^a$ satisfies $\mbb E[\tilde {\mca R}^a] > \mu_{a^*}$. Let the original measure be denoted $P$ and the new measure $P'$. Fix a bound sequence $n_t$. 
+\begin{align}
+    \mbb E_P[N_a(t)] 
+    &\geq n_t \left(1 - P[N_a(t) \leq n_t]\right)
+\end{align}
+We seek to choose $n_t$ such that $P[N_a(t) \geq n_t]=o(1)$. Upper-bound this term by splitting it into two cases: 
+
+- The first case denotes the probability that the deviation between $P$ and $P'$ is not close to that given by KL. goes to $\delta_t = o(1)$ by weak law of large numbers. 
+- The second case isolates a case where the deviation between $P, P'$ is $\epsilon$-close to that given by KL. 
+
+Note that conditioning on actions, the bandit environment tensorizes; let $D(r_k)=\log \df{P'(r_k)}{P(r_k)}$ denote the random variable such that $\mbb E[e^D] = dP'/dP$ and $\mbb E[D] = D(P'\|P)$, then 
+\begin{align}
+    P[N_a(t) \leq n_t] 
+    &= P\left[
+        N_a(t) \leq n_t \text{   and   } 
+        \left| 
+            D(P\|P') - \df 1 {n_t} \sum_{k=1}^{n_t} D(r_k)
+        \right| > \epsilon 
+    \right] \\ 
+    &\quad + P\left[
+        N_a(t) \leq n_t \text{   and   } 
+        \left| 
+            D(P\|P') - \df 1 {n_t} \sum_{k=1}^{n_t} D(r_k)
+        \right| \leq \epsilon 
+    \right] \\ 
+    &\leq P\left[
+       \left| 
+            D(P\|P') - \df 1 {n_t} \sum_{k=1}^{n_t} D(r_k)
+        \right| > \epsilon 
+    \right] \\ 
+    &\quad + \mbb E_{P'}\left[
+        \exp \left(
+            \sum_{k=1}^{n_t} D(r_k) 
+        \right)_{\leq n_t [D(P\|P')+\epsilon]} P' \left[
+        N_a(t) \leq n_t
+        \right]
+    \right] \\ 
+    &\leq \delta_t + \exp \left( 
+        n_t [D(P\|P') + \epsilon]
+    \right) P'[N_a(t) \leq n_t] 
+\end{align}
+
+It remains to bound $P'[N_a(t) \leq n_t]$ by Markov's inequality and choose $n_t$: w.l.o.g suppose that the algorithm pulls the suboptimal arm at rate $o(t^\eta)$ for $\eta\in (0, 1)$, we have 
+\[ 
+    P'[N_a(t) \leq n_t] = P'(t - N_a(t) \geq t - n_T) 
+    \leq \df{\mbb E_{P'}[t - N_a(t)]}{t-n_t} = o(t^{\eta - 1}) 
+\] 
+Substituting, we obtain the bound on 
+\begin{align}
+    P'[N_a(t) \leq n_t] 
+    &\leq \delta_t + \exp \left( 
+        n_t [D(P\|P') + \epsilon]
+    \right) o(t^{\eta - 1})
+\end{align}
+The largest choice of $n_t$ which keeps the whole bound $o(1)$ is 
+\[ 
+    n_t = \df{1-\eta}{D(P\|P') + \epsilon} \log t, \quad 
+    \mbb E_P[N_a(t)] \geq n_t (1 - o(1)) 
+\] 
+Take $\epsilon\to 0$; also note that by chain rule, $D(P\|P') = \mbb E_P[N_a(t)] D(\mca R^a \|\tilde {\mca R}^a) \geq D(\mca R^a \|\tilde {\mca R}^a)$. Take $\tilde {\mca R^a}\to \mca R^{a^*}$ and substituting into the regret formula yields the desired bound. 
