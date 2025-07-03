@@ -23,7 +23,7 @@
 <meta name="author" content="Nicholas Lyu" />
 
 
-<meta name="date" content="2025-07-02" />
+<meta name="date" content="2025-07-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -132,10 +132,10 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="6" data-path="exploration.html"><a href="exploration.html"><i class="fa fa-check"></i><b>6</b> Exploration</a>
 <ul>
-<li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html#bandits"><i class="fa fa-check"></i>Bandits</a></li>
+<li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html#bandits"><i class="fa fa-check"></i>Multi-arm bandit</a></li>
 <li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html#lrLB"><i class="fa fa-check"></i>Lai-Robins lower bound</a></li>
-<li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html#ucb"><i class="fa fa-check"></i>UCB Bandit</a></li>
-<li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html#bayesianBandit"><i class="fa fa-check"></i>Bayesian Bandits</a></li>
+<li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html#ucb"><i class="fa fa-check"></i>Upper confidence bound method</a></li>
+<li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html#bayesianBandit"><i class="fa fa-check"></i>Bayesian bandit</a></li>
 <li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html#mdpExploration"><i class="fa fa-check"></i>Exploration in MDPs</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="bibliography.html"><a href="bibliography.html"><i class="fa fa-check"></i>Bibliography</a></li>
@@ -159,10 +159,20 @@ div.csl-indent {
 <div id="exploration" class="section level1 hasAnchor" number="6">
 <h1><span class="header-section-number">6</span> Exploration<a href="exploration.html#exploration" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <ol style="list-style-type: decimal">
+<li>Multi-armed bandit (MAB) = MDP with memoryless environment and one state. It provides a reduced case for analyzing exploration v. exploitation.
+<ul>
+<li>Generalization to <span class="math inline">\(|\mathcal S|&gt;1\)</span> states = <strong>contextual bandit</strong> = MDP with memoryless environment.</li>
+</ul></li>
 <li>Lai-Robbins lower bound (theorem <a href="exploration.html#thm:regretLowerBound">6.1</a>): regret grows at least as <span class="math inline">\(\log t\)</span>. <span style="color:blue">This is an exemplary proof using deviations theory.</span></li>
+<li>Optimism dominates pessimism in face of uncertainty:
+<ul>
+<li>UCB algorithm and regret bound @(thm:ucbRegret).</li>
+<li>LCB algorithm is inherently greedy.</li>
+</ul></li>
+<li><a href="exploration.html#bayesianBandit">Bayesian setup</a>: bayesian regret and Thompson sampling, which implements probability matching.</li>
 </ol>
 <div id="bandits" class="section level2 unnumbered hasAnchor">
-<h2>Bandits<a href="exploration.html#bandits" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<h2>Multi-arm bandit<a href="exploration.html#bandits" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="definition">
 <p><span id="def:multiArmBandit" class="definition"><strong>Definition 6.1  (multiarmed bandits) </strong></span>A multi-armed bandit consists of a known set of <span class="math inline">\(m\)</span> actions, <span class="math inline">\(\mathcal R^a(r)=\mathbb P(r\mid a)\)</span> an unknown yet stationary distribution over rewards. At each step, the agent selects action <span class="math inline">\(a_t\in \mathcal A\)</span> and the environment generates a reward. The goal is the maximize the cumulative reward <span class="math inline">\(\sum_{\tau=1}^t r_\tau\)</span>.</p>
 </div>
@@ -204,12 +214,12 @@ P(E_t) = P(E_t \cap \overline{C_t}) + P(E_t \cap C_t)
 </ol>
 </div>
 <div class="theorem">
-<p><span id="thm:regretLowerBound" class="theorem"><strong>Theorem 6.1  (Lai-Robbins lower bound) </strong></span>For any algorithm such that the number of suboptimal pulls is <span class="math inline">\(o(t^{\eta\in (0, 1)})\)</span>, we have
+<p><span id="thm:regretLowerBound" class="theorem"><strong>Theorem 6.1  (Lai-Robbins lower bound) </strong></span>For any algorithm such that the number of suboptimal pulls is <span class="math inline">\(o(t^{\eta\in (0, 1)})\)</span>, we have a logarithmic lower bound on regret:
 <span class="math display">\[\begin{align}
-    L_t = \sum_{a\neq a^*} \dfrac{1-\eta}{D(\mathcal R^a \| \mathcal R^{a^*})} \Delta_a \log t
+    L_t \geq (1-\eta) \log t \sum_{a\neq a^*} \dfrac{\Delta_a}{D(\mathcal R^a \| \mathcal R^{a^*})}
 \end{align}\]</span></p>
 </div>
-<p>Fixing any suboptimal arm <span class="math inline">\(a\)</span>, construct a new bandit instance in which <span class="math inline">\(a\)</span> is optimal, i.e. <span class="math inline">\(\tilde {\mathcal R}^a\)</span> satisfies <span class="math inline">\(\mathbb E[\tilde {\mathcal R}^a] &gt; \mu_{a^*}\)</span>. Let the original measure be denoted <span class="math inline">\(P\)</span> and the new measure <span class="math inline">\(P&#39;\)</span>. Fix a bound sequence <span class="math inline">\(n_t\)</span>.
+<p><em>Proof:</em> Fixing any suboptimal arm <span class="math inline">\(a\)</span>, construct a new bandit instance in which <span class="math inline">\(a\)</span> is optimal, i.e. <span class="math inline">\(\tilde {\mathcal R}^a\)</span> satisfies <span class="math inline">\(\mathbb E[\tilde {\mathcal R}^a] &gt; \mu_{a^*}\)</span>. Let the original measure be denoted <span class="math inline">\(P\)</span> and the new measure <span class="math inline">\(P&#39;\)</span>. Fix a bound sequence <span class="math inline">\(n_t\)</span>; elementary probability yields
 <span class="math display">\[\begin{align}
     \mathbb E_P[N_a(t)]
     &amp;\geq n_t \left(1 - P[N_a(t) \leq n_t]\right)
@@ -270,13 +280,123 @@ The largest choice of <span class="math inline">\(n_t\)</span> which keeps the w
 Take <span class="math inline">\(\epsilon\to 0\)</span>; also note that by chain rule, <span class="math inline">\(D(P\|P&#39;) = \mathbb E_P[N_a(t)] D(\mathcal R^a \|\tilde {\mathcal R}^a) \geq D(\mathcal R^a \|\tilde {\mathcal R}^a)\)</span>. Take <span class="math inline">\(\tilde {\mathcal R^a}\to \mathcal R^{a^*}\)</span> and substituting into the regret formula yields the desired bound.</p>
 </div>
 <div id="ucb" class="section level2 unnumbered hasAnchor">
-<h2>UCB Bandit<a href="exploration.html#ucb" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<h2>Upper confidence bound method<a href="exploration.html#ucb" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The bandit setup highlights the tradeoff between exploration and exploitation. Note that <span class="math inline">\(\epsilon\)</span>-greedy methods for fixed <span class="math inline">\(\epsilon\)</span> can invoke linear regret:</p>
+<ul>
+<li>If <span class="math inline">\(\epsilon&gt;0\)</span>, regret <span class="math inline">\(\propto \epsilon/m \min_{a\neq a^*} \Delta_a\)</span></li>
+<li>If <span class="math inline">\(\epsilon=0\)</span>, we might be pulling a suboptimal arm greedily forever.</li>
+<li>In general, the decay schedule of <span class="math inline">\(\epsilon\)</span> is problem-dependent to achieve sublinear regret.</li>
+</ul>
+<div class="theorem">
+<p><span id="thm:hoeffding" class="theorem"><strong>Theorem 6.2  (Hoeffding's inequality) </strong></span>Given i.i.d. random variables <span class="math inline">\((X_j)\in [0, 1]\)</span> and let <span class="math inline">\(\bar X_n\)</span> be the sample mean, then
+<span class="math display">\[
+    P\left[\mathbb E[X] &gt; \bar X_n + u\right] \leq \exp(-2nu^2)
+\]</span>
+Rearrange and use symmetry to obtain a bound on the absolute value difference
+<span class="math display">\[
+    P\left[\left|\mathbb E[X] - \bar X_n\right| &gt; \sqrt{\dfrac{\log(2/\delta)}{2n}}\right] \leq \delta
+\]</span></p>
+</div>
+<div class="definition">
+<p><span id="def:ucb" class="definition"><strong>Definition 6.3  (UCB algorithm) </strong></span>Given a MAB (multi-arm bandit) with <span class="math inline">\(m\)</span> arms:</p>
+<ol style="list-style-type: decimal">
+<li>Sample once from each arm.</li>
+<li>Let <span class="math inline">\(N_a\)</span> denote the number of times arm <span class="math inline">\(a\)</span> has been pulled, and <span class="math inline">\(\hat Q(a)\)</span> be the sample mean reward of arm <span class="math inline">\(a\)</span>, choose
+<span class="math display">\[
+a_t = \operatorname*{arg\,max}_{a} \hat Q(a) + \sqrt{\dfrac{\log(2/\delta_t)}{2n_a}} \equiv \operatorname*{arg\,max}_{a} \mathrm{UCB}(a, t), \quad \delta_t = 1/t^2
+\]</span></li>
+</ol>
+</div>
+<div class="theorem">
+<p><span id="thm:ucbRegret" class="theorem"><strong>Theorem 6.3  (UCB regret bound) </strong></span>Using the UCB algorithm as in <a href="exploration.html#def:ucb">6.3</a>, the regret is
+<span class="math display">\[
+    L_t = \sum_{\Delta_a \neq 0} \Delta_a \mathbb E[n_a(t)] \leq \Omega\left(
+        \log t \sum_{\Delta_a\neq 0} \dfrac 1 {\Delta_a}
+    \right)
+\]</span></p>
+</div>
+<details>
+<summary>
+Assuming that bounds are satisfied, analyze relation between <span class="math inline">\(\delta_t, n_a, Q(a), \hat Q(a), Q(a^*)\)</span>
+</summary>
+<p>For a suboptimal arm <span class="math inline">\(a\)</span> to be pulled at time <span class="math inline">\(t\)</span>, we have <span class="math inline">\(\mathrm{UCB}(a, t) \geq \mathrm{UCB}(a^*, t)\)</span>. We next break the scenario into two cases:</p>
+<ol style="list-style-type: decimal">
+<li><strong>High-probability case</strong>: The bound for <span class="math inline">\(a\)</span> hold on both sides, and <span class="math inline">\(\mathrm{UCB}(a^*, t) \geq Q(a^*)\)</span>. Then
+<span class="math display">\[
+\hat Q(a) - \sqrt{\dfrac{\log(2/\delta_t)}{2n_a}} \leq Q(a) \leq \hat Q(a) + \sqrt{\dfrac{\log(2/\delta_t)}{2n_a }}
+\]</span>
+Additionally, the upper bound must exceed that of the optimal arm; optimal arm holds as well, we have
+<span class="math display">\[\begin{align}
+Q(a^*) \leq \mathrm{UCB}(a^*, t) \leq \hat Q(a) + \sqrt{\dfrac{\log(2/\delta_t)}{2n_a }}
+\leq Q(a) + 2 \sqrt{\dfrac{\log(2/\delta_t)}{2n_a }}
+\end{align}\]</span>
+Rearrange to yield
+<span class="math display">\[
+Q(a^*) - Q(a) = \Delta_a \leq 2 \sqrt{\dfrac{\log(2/\delta_t)}{2n_a }} \implies n_a \leq \dfrac{2}{\Delta_a^2} \log \dfrac{2}{\delta_t}
+\]</span></li>
+<li><strong>Low-probability case</strong>: bound for <span class="math inline">\(a\)</span> doesn’t hold when <span class="math inline">\(a\)</span> is chosen at time <span class="math inline">\(t\)</span>, or if <span class="math inline">\(\mathrm{UCB}(a^*, t) \leq Q(a^*)\)</span>; in this case there’re no guarantees on the number of times <span class="math inline">\(a\)</span> could have been pulled so the worst case is <span class="math inline">\(t\)</span>.
+<ul>
+<li>The probability that the bound for <span class="math inline">\(a\)</span> doesn’t hold when <span class="math inline">\(a\)</span> is chosen at time <span class="math inline">\(t\)</span> is just <span class="math inline">\(\delta_t\)</span>.</li>
+<li>For the second component, <span class="math inline">\(P(\mathrm{UCB}(a^*, t) \leq Q(a^*))\)</span> is upper bounded by the probability that the bound for <span class="math inline">\(a^*\)</span> doesn’t hold for any of time steps <span class="math inline">\(1, \dots, t\)</span>, which is <span class="math inline">\(\sum_{\tau=1}^t \delta_\tau\)</span>.</li>
+</ul></li>
+</ol>
+Combining the bounds and choose <span class="math inline">\(\delta_t = 1/t^2\)</span> so that <span class="math inline">\(\sum_{\tau=1}^t \delta_\tau = \Omega(1/t)\)</span>, we obtain
+<span class="math display">\[\begin{aligned}
+    \mathbb E[n_{a\neq a^*}]
+    &amp;\leq \mathbb E\left[n_{a\neq a^*} \mid \text{high-prob case}\right] + n P(\text{low-prob case})  \\
+    &amp;\leq \dfrac{2}{\Delta_a^2} \log \dfrac{2}{\delta_t} + n\left(
+        \delta_t + \sum_{\tau=1}^t \delta_\tau
+    \right) \\
+    &amp;\leq \dfrac{2}{\Delta_a^2} \log \dfrac{2}{\delta_t} + t^{-1} + t\,  \Omega(t^{-1}) = \Omega \left(\dfrac{\log t}{\Delta_a^2}\right)
+\end{aligned}\]</span>
+</details>
+<div class="remark">
+<p><span id="unlabeled-div-19" class="remark"><em>Remark</em> (LCB algorithm). </span>Note that an algorithm which selects the action with greatest lower confidence bound is inherently greedy. When <span class="math inline">\(Q(a^*)&gt;Q(a)&gt;\mathrm{UCB}(a)&gt;\mathrm{UCB}(a^*)\)</span>, the algorithm never explores <span class="math inline">\(a^*\)</span>.</p>
+</div>
 </div>
 <div id="bayesianBandit" class="section level2 unnumbered hasAnchor">
-<h2>Bayesian Bandits<a href="exploration.html#bayesianBandit" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<h2>Bayesian bandit<a href="exploration.html#bayesianBandit" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>While frequentist inference assumes that there is a fixed distribution parameter, Bayesian inference assumes that there is a prior over parameters. Regret is computed similarly as</p>
+<p><span class="math display">\[
+    L^{\mathrm{Bayes}}_t = %
+  \mathop{\mathbb{E}}\limits_{\substack{\theta\sim p_\theta \\ a_t\sim \tau}} \left[
+        \sum_{\tau=1}^t Q(a^*) - Q(a_t)
+        \bigg| \theta
+    \right]
+\]</span></p>
+<div class="definition">
+<p><span id="def:probMatching" class="definition"><strong>Definition 6.4  (probability matching) </strong></span>In a Bayes setting, a probability matching algorithm selects action <span class="math inline">\(a\)</span> according to the probability that <span class="math inline">\(a\)</span> is the optimal action, given the current history
+<span class="math display">\[
+    \pi(a\mid h_t) = P\left[
+        Q(a) &gt; Q(a&#39;\neq a) \mid h_t
+    \right]
+\]</span></p>
+<ol style="list-style-type: decimal">
+<li>Note that <span class="math inline">\(Q(a), Q(a&#39;)\)</span> here are inherently scalars.</li>
+<li>The probability is taken over distribution of reward distribution parameters <span class="math inline">\(\{\theta_a\}\)</span>, conditioned upon history <span class="math inline">\(h_t\)</span>.</li>
+</ol>
+</div>
+<div class="definition">
+<p><span id="def:thompsonSamp" class="definition"><strong>Definition 6.5  (Thompson sampling) </strong></span>Given priors <span class="math inline">\(p(\mathcal R_a)\)</span>, for each iteration repeat:</p>
+<ol style="list-style-type: decimal">
+<li>For each arm, sample a reward <strong>distribution parameter</strong> from the parameter posterior <span class="math inline">\(\hat \theta_a \sim \left(p(\mathcal R_a)\mid h_t\right)\)</span>.</li>
+<li>Compute the sampled distribution’s mean <span class="math inline">\(Q(a) = \mathbb E_{\theta_a} \mathcal R_a(\theta_a)\)</span>.</li>
+<li>Select <span class="math inline">\(a = \operatorname*{arg\,max}_{a} Q(a)\)</span> and observe reward.</li>
+<li>Update posterior for arm <span class="math inline">\(a\)</span>.</li>
+</ol>
+</div>
+<p>Note that probability matching is inherently optimistic in case of uncertainty. Also note that we sample a reward distribution parameter and analytically compute the mean reward, given that parameter.</p>
 </div>
 <div id="mdpExploration" class="section level2 unnumbered hasAnchor">
 <h2>Exploration in MDPs<a href="exploration.html#mdpExploration" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="definition">
+<p><span id="def:unlabeled-div-20" class="definition"><strong>Definition 6.6  (PAC control) </strong></span>Given a MDP, a control algorithm is probably approximately correct (PAC) if on each step, the chosen action <span class="math inline">\(a\)</span>:</p>
+<ul>
+<li>is <span class="math inline">\(\epsilon\)</span>-optimal: <span class="math inline">\(Q(s, a)\geq Q(s, a^*) - \epsilon\)</span>.</li>
+<li>with probability at least <span class="math inline">\(1-\delta\)</span></li>
+</ul>
+<p>on all but <span class="math inline">\(\mathrm{poly}(\mathcal|A|, \epsilon, \delta, \dots)\)</span> number of steps.</p>
+</div>
 
 </div>
 </div>

@@ -61,6 +61,12 @@ def:dpoAlg
 def:multiArmBandit
 def:unlabeled-div-18
 thm:regretLowerBound
+thm:hoeffding
+def:ucb
+thm:ucbRegret
+def:probMatching
+def:thompsonSamp
+def:unlabeled-div-20
 mdp
 sampMDP
 polMethods

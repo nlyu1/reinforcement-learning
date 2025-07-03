@@ -1,8 +1,14 @@
 # Exploration
 
-1. Lai-Robbins lower bound (theorem \@ref(thm:regretLowerBound)): regret grows at least as $\log t$. <span style="color:blue">This is an exemplary proof using deviations theory.</span>
+1. Multi-armed bandit (MAB) = MDP with memoryless environment and one state. It provides a reduced case for analyzing exploration v. exploitation. 
+    - Generalization to $|\mca S|>1$ states = **contextual bandit** = MDP with memoryless environment. 
+2. Lai-Robbins lower bound (theorem \@ref(thm:regretLowerBound)): regret grows at least as $\log t$. <span style="color:blue">This is an exemplary proof using deviations theory.</span>
+3. Optimism dominates pessimism in face of uncertainty: 
+    - UCB algorithm and regret bound \@(thm:ucbRegret). 
+    - LCB algorithm is inherently greedy. 
+4. [Bayesian setup](#bayesianBandit): bayesian regret and Thompson sampling, which implements probability matching.  
 
-## Bandits {#bandits -}
+## Multi-arm bandit {#bandits -}
 
 :::{.definition #multiArmBandit name="multiarmed bandits"}
 A multi-armed bandit consists of a known set of $m$ actions, $\mca R^a(r)=\mbb P(r\mid a)$ an unknown yet stationary distribution over rewards. At each step, the agent selects action $a_t\in \mca A$ and the environment generates a reward. The goal is the maximize the cumulative reward $\sum_{\tau=1}^t r_\tau$. 
@@ -43,13 +49,13 @@ Proof for the following theorem is adapted from [appliedprobability.blog](https:
 :::
 
 :::{.theorem #regretLowerBound name="Lai-Robbins lower bound"}
-For any algorithm such that the number of suboptimal pulls is $o(t^{\eta\in (0, 1)})$, we have 
+For any algorithm such that the number of suboptimal pulls is $o(t^{\eta\in (0, 1)})$, we have a logarithmic lower bound on regret: 
 \begin{align}
-    L_t = \sum_{a\neq a^*} \df{1-\eta}{D(\mca R^a \| \mca R^{a^*})} \Delta_a \log t
+    L_t \geq (1-\eta) \log t \sum_{a\neq a^*} \df{\Delta_a}{D(\mca R^a \| \mca R^{a^*})}
 \end{align}
 :::
 
-Fixing any suboptimal arm $a$, construct a new bandit instance in which $a$ is optimal, i.e. $\tilde {\mca R}^a$ satisfies $\mbb E[\tilde {\mca R}^a] > \mu_{a^*}$. Let the original measure be denoted $P$ and the new measure $P'$. Fix a bound sequence $n_t$. 
+_Proof:_ Fixing any suboptimal arm $a$, construct a new bandit instance in which $a$ is optimal, i.e. $\tilde {\mca R}^a$ satisfies $\mbb E[\tilde {\mca R}^a] > \mu_{a^*}$. Let the original measure be denoted $P$ and the new measure $P'$. Fix a bound sequence $n_t$; elementary probability yields 
 \begin{align}
     \mbb E_P[N_a(t)] 
     &\geq n_t \left(1 - P[N_a(t) \leq n_t]\right)
@@ -110,8 +116,121 @@ The largest choice of $n_t$ which keeps the whole bound $o(1)$ is
 \] 
 Take $\epsilon\to 0$; also note that by chain rule, $D(P\|P') = \mbb E_P[N_a(t)] D(\mca R^a \|\tilde {\mca R}^a) \geq D(\mca R^a \|\tilde {\mca R}^a)$. Take $\tilde {\mca R^a}\to \mca R^{a^*}$ and substituting into the regret formula yields the desired bound. 
 
-## UCB Bandit {#ucb -}
+## Upper confidence bound method {#ucb -}
 
-## Bayesian Bandits {#bayesianBandit -} 
+The bandit setup highlights the tradeoff between exploration and exploitation. Note that $\epsilon$-greedy methods for fixed $\epsilon$ can invoke linear regret: 
+
+- If $\epsilon>0$, regret $\propto \epsilon/m \min_{a\neq a^*} \Delta_a$
+- If $\epsilon=0$, we might be pulling a suboptimal arm greedily forever. 
+- In general, the decay schedule of $\epsilon$ is problem-dependent to achieve sublinear regret. 
+
+:::{.theorem #hoeffding name="Hoeffding's inequality"}
+Given i.i.d. random variables $(X_j)\in [0, 1]$ and let $\bar X_n$ be the sample mean, then 
+\[ 
+    P\left[\mbb E[X] > \bar X_n + u\right] \leq \exp(-2nu^2)
+\] 
+Rearrange and use symmetry to obtain a bound on the absolute value difference 
+\[ 
+    P\left[\left|\mbb E[X] - \bar X_n\right| > \sqrt{\df{\log(2/\delta)}{2n}}\right] \leq \delta 
+\] 
+:::
+
+:::{.definition #ucb name="UCB algorithm"}
+Given a MAB (multi-arm bandit) with $m$ arms: 
+
+1. Sample once from each arm. 
+2. Let $N_a$ denote the number of times arm $a$ has been pulled, and $\hat Q(a)$ be the sample mean reward of arm $a$, choose 
+\[ 
+    a_t = \argmax{a} \hat Q(a) + \sqrt{\df{\log(2/\delta_t)}{2n_a}} \equiv \argmax a \mrm{UCB}(a, t), \quad \delta_t = 1/t^2 
+\] 
+:::
+
+:::{.theorem #ucbRegret name="UCB regret bound"}
+Using the UCB algorithm as in \@ref(def:ucb), the regret is 
+\[ 
+    L_t = \sum_{\Delta_a \neq 0} \Delta_a \mbb E[n_a(t)] \leq \Omega\left(
+        \log t \sum_{\Delta_a\neq 0} \df 1 {\Delta_a}
+    \right)
+\] 
+:::
+
+<details>
+<summary>Assuming that bounds are satisfied, analyze relation between $\delta_t, n_a, Q(a), \hat Q(a), Q(a^*)$</summary>
+For a suboptimal arm $a$ to be pulled at time $t$, we have $\mrm{UCB}(a, t) \geq \mrm{UCB}(a^*, t)$. We next break the scenario into two cases:
+
+1. **High-probability case**: The bound for $a$ hold on both sides, and $\mrm{UCB}(a^*, t) \geq Q(a^*)$. Then 
+\[ 
+    \hat Q(a) - \sqrt{\df{\log(2/\delta_t)}{2n_a}} \leq Q(a) \leq \hat Q(a) + \sqrt{\df{\log(2/\delta_t)}{2n_a }}
+\] 
+Additionally, the upper bound must exceed that of the optimal arm;  optimal arm holds as well, we have 
+\begin{align}
+    Q(a^*) \leq \mrm{UCB}(a^*, t) \leq \hat Q(a) + \sqrt{\df{\log(2/\delta_t)}{2n_a }}
+    \leq Q(a) + 2 \sqrt{\df{\log(2/\delta_t)}{2n_a }}
+\end{align}
+Rearrange to yield 
+\[ 
+    Q(a^*) - Q(a) = \Delta_a \leq 2 \sqrt{\df{\log(2/\delta_t)}{2n_a }} \implies n_a \leq \df{2}{\Delta_a^2} \log \df{2}{\delta_t} 
+\] 
+2. **Low-probability case**: bound for $a$ doesn't hold when $a$ is chosen at time $t$, or if $\mrm{UCB}(a^*, t) \leq Q(a^*)$; in this case there're no guarantees on the number of times $a$ could have been pulled so the worst case is $t$. 
+    - The probability that the bound for $a$ doesn't hold when $a$ is chosen at time $t$ is just $\delta_t$. 
+    - For the second component, $P(\mrm{UCB}(a^*, t) \leq Q(a^*))$ is upper bounded by the probability that the bound for $a^*$ doesn't hold for any of time steps $1, \dots, t$, which is $\sum_{\tau=1}^t \delta_\tau$. 
+
+Combining the bounds and choose $\delta_t = 1/t^2$ so that $\sum_{\tau=1}^t \delta_\tau = \Omega(1/t)$, we obtain 
+\begin{aligned}
+    \mbb E[n_{a\neq a^*}]
+    &\leq \mbb E\left[n_{a\neq a^*} \mid \text{high-prob case}\right] + n P(\text{low-prob case})  \\ 
+    &\leq \df{2}{\Delta_a^2} \log \df{2}{\delta_t} + n\left(
+        \delta_t + \sum_{\tau=1}^t \delta_\tau 
+    \right) \\ 
+    &\leq \df{2}{\Delta_a^2} \log \df{2}{\delta_t} + t^{-1} + t\,  \Omega(t^{-1}) = \Omega \left(\df{\log t}{\Delta_a^2}\right)
+\end{aligned}
+</details>
+
+:::{.remark name="LCB algorithm"}
+Note that an algorithm which selects the action with greatest lower confidence bound is inherently greedy. When $Q(a^*)>Q(a)>\mrm{UCB}(a)>\mrm{UCB}(a^*)$, the algorithm never explores $a^*$. 
+:::
+
+## Bayesian bandit {#bayesianBandit -} 
+
+While frequentist inference assumes that there is a fixed distribution parameter, Bayesian inference assumes that there is a prior over parameters. Regret is computed similarly as 
+
+\[ 
+    L^{\mrm{Bayes}}_t = \EEV{\theta\sim p_\theta}{a_t\sim \tau} \left[
+        \sum_{\tau=1}^t Q(a^*) - Q(a_t) 
+        \bigg| \theta
+    \right]
+\] 
+
+:::{.definition #probMatching name="probability matching"}
+In a Bayes setting, a probability matching algorithm selects action $a$ according to the probability that $a$ is the optimal action, given the current history 
+\[ 
+    \pi(a\mid h_t) = P\left[
+        Q(a) > Q(a'\neq a) \mid h_t 
+    \right]
+\] 
+
+1. Note that $Q(a), Q(a')$ here are inherently scalars. 
+2. The probability is taken over distribution of reward distribution parameters $\{\theta_a\}$, conditioned upon history $h_t$. 
+:::
+
+:::{.definition #thompsonSamp name="Thompson sampling"}
+Given priors $p(\mca R_a)$, for each iteration repeat:
+
+1. For each arm, sample a reward **distribution parameter** from the parameter posterior $\hat \theta_a \sim \left(p(\mca R_a)\mid h_t\right)$. 
+2. Compute the sampled distribution's mean $Q(a) = \mbb E_{\theta_a} \mca R_a(\theta_a)$. 
+3. Select $a = \argmax a Q(a)$ and observe reward. 
+4. Update posterior for arm $a$. 
+:::
+
+Note that probability matching is inherently optimistic in case of uncertainty. Also note that we sample a reward distribution parameter and analytically compute the mean reward, given that parameter. 
 
 ## Exploration in MDPs {#mdpExploration -}
+
+:::{.definition name="PAC control"}
+Given a MDP, a control algorithm is probably approximately correct (PAC) if on each step, the chosen action $a$: 
+
+- is $\epsilon$-optimal: $Q(s, a)\geq Q(s, a^*) - \epsilon$. 
+- with probability at least $1-\delta$ 
+
+on all but $\mrm{poly}(\mca |A|, \epsilon, \delta, \dots)$ number of steps. 
+:::
