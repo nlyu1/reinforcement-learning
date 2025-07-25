@@ -230,7 +230,7 @@ More steps imply (closer to MC) + (higher variance) + (lower bias). In either ca
 It can be proven inductively that 
 \begin{align}
     \hat A^{(k)}_t 
-    = \sum_{j=0}^{k-1} \gamma^j r_{t+j} \gamma^k \hat V(s_{t+k}) - \hat V(s_t)
+    = \sum_{j=0}^{k-1} \gamma^j + r_{t+j} \gamma^k \hat V(s_{t+k}) - \hat V(s_t)
 \end{align}
 
 :::{.definition #gae name="Generalized Advantage Estimator"}
