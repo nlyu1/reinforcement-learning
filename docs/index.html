@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Reinforcement Learning</title>
   <meta name="description" content="Reinforcement Learning" />
-  <meta name="generator" content="bookdown 0.39 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Reinforcement Learning" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Nicholas Lyu" />
 
 
-<meta name="date" content="2025-07-25" />
+<meta name="date" content="2025-07-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -64,7 +64,6 @@
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
-  margin-bottom: 0em;
 }
 .hanging div.csl-entry {
   margin-left:2em;
@@ -95,7 +94,11 @@ div.csl-indent {
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#chapter-highlights"><i class="fa fa-check"></i>Chapter highlights</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#cool-theorems"><i class="fa fa-check"></i>Cool theorems</a></li>
+</ul></li>
 <li class="chapter" data-level="1" data-path="mdp.html"><a href="mdp.html"><i class="fa fa-check"></i><b>1</b> Markov Decision Processes</a>
 <ul>
 <li class="chapter" data-level="" data-path="mdp.html"><a href="mdp.html#MDP"><i class="fa fa-check"></i>Preliminaries</a></li>
@@ -118,6 +121,7 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="polMethods.html"><a href="polMethods.html#advEstimate"><i class="fa fa-check"></i>Generalized Advantage Estimation</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="polMethods.html"><a href="polMethods.html#ppo"><i class="fa fa-check"></i>Off-policy, conservative updates</a></li>
+<li class="chapter" data-level="" data-path="polMethods.html"><a href="polMethods.html#vTrace"><i class="fa fa-check"></i>V-trace</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="iRL.html"><a href="iRL.html"><i class="fa fa-check"></i><b>4</b> Inverse RL</a>
 <ul>
@@ -131,13 +135,12 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="rlLLMs.html"><a href="rlLLMs.html#rewardPreference"><i class="fa fa-check"></i>Preference-based reward modeling</a></li>
 <li class="chapter" data-level="" data-path="rlLLMs.html"><a href="rlLLMs.html#dpo"><i class="fa fa-check"></i>Direct Preference Optimization</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="exploration.html"><a href="exploration.html"><i class="fa fa-check"></i><b>6</b> Exploration</a>
+<li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html"><i class="fa fa-check"></i>Exploration</a>
 <ul>
 <li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html#bandits"><i class="fa fa-check"></i>Multi-arm bandit</a></li>
 <li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html#lrLB"><i class="fa fa-check"></i>Lai-Robins lower bound</a></li>
 <li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html#ucb"><i class="fa fa-check"></i>Upper confidence bound method</a></li>
 <li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html#bayesianBandit"><i class="fa fa-check"></i>Bayesian bandit</a></li>
-<li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html#mdpExploration"><i class="fa fa-check"></i>Exploration in MDPs</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="bibliography.html"><a href="bibliography.html"><i class="fa fa-check"></i>Bibliography</a></li>
 </ul>
@@ -160,21 +163,24 @@ div.csl-indent {
 <div id="header">
 <h1 class="title">Reinforcement Learning</h1>
 <p class="author"><em>Nicholas Lyu</em></p>
-<p class="date"><em>2025-07-25</em></p>
+<p class="date"><em>2025-07-27</em></p>
 </div>
 <div id="preface" class="section level1 unnumbered hasAnchor">
 <h1>Preface<a href="index.html#preface" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>These notes accompany the summer 2025 self-learning for <em>Reinforcement Learning</em>.</p>
+<p>These notes accompany the summer 2025 self-learning for <em>Reinforcement Learning</em>. Reference resources include:</p>
+<ul>
+<li>Harvard CS1840’s textbook <a href="https://rlbook.adzc.ai/">an Introduction to Reinforcement Learning</a> by Alexander Cai.</li>
+<li><a href="https://web.stanford.edu/class/cs234/">Stanford CS234</a> lecture notes and <a href="https://www.youtube.com/watch?v=WsvFL-LjA6U&amp;list=PLoROMvodv4rN4wG6Nk6sNpTEbuOSosZdX">lectures</a> by professor Emma Brunskill.</li>
+</ul>
+<div id="chapter-highlights" class="section level2 unnumbered hasAnchor">
+<h2>Chapter highlights<a href="index.html#chapter-highlights" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ol style="list-style-type: decimal">
-<li><a href="mdp.html#mdp">Markov Decision Processes</a> explores closed-form solutions to finite and infinite-horizon MDPs with <strong>known dynamics and rewards</strong>.</li>
-</ol>
+<li><a href="mdp.html#mdp">Markov Decision Processes</a> explores closed-form solutions to finite and infinite-horizon MDPs with <strong>known dynamics and rewards</strong>.
 <ol style="list-style-type: lower-alpha">
 <li>Recursive and optimality operators; contraction properties.</li>
 <li>Control problem can be reduced to iterate (policy evaluation + greedy action), i.e. policy iteration.</li>
-</ol>
-<ol start="2" style="list-style-type: decimal">
-<li><a href="sampMDP.html#sampMDP">Sample-based MDP solutions</a> explores MDP solutions with <strong>unknown dynamics, known rewards</strong>.</li>
-</ol>
+</ol></li>
+<li><a href="sampMDP.html#sampMDP">Sample-based MDP solutions</a> explores MDP solutions with <strong>unknown dynamics, known rewards</strong>.
 <ul>
 <li>Estimate procedures:
 <ul>
@@ -183,26 +189,61 @@ div.csl-indent {
 </ul></li>
 <li>Monte-Carlo policy iteration: MC + PI, online on-policy.</li>
 <li>SARSA: TD policy iteration, online on-policy</li>
-<li>Q-learning: action-value iteration; can use TD (canonical) or MC.</li>
-</ul>
-<ol start="3" style="list-style-type: decimal">
-<li><a href="polMethods.html#polMethods">Policy Methods</a> explores an orthogonal approach by directly optimizing policies. Foundational policy gradient theorem <a href="polMethods.html#thm:PG">3.1</a> is improved in two areas:</li>
-</ol>
+<li>Q-learning: action-value iteration; can use TD (canonical) or MC to approximate action-value function, then act greedily.</li>
+</ul></li>
+<li><a href="polMethods.html#polMethods">Policy Methods</a> explores an orthogonal approach by <em>directly optimizing policies</em>. Foundational policy gradient theorem <a href="polMethods.html#thm:PG">3.1</a> is improved in two ways:
 <ul>
-<li>Reducing variance: baseline theorem <a href="polMethods.html#thm:pgBaseline">3.2</a>.</li>
-<li>Using off-policy data: relative policy difference theorem <a href="polMethods.html#def:surrogatePG">3.7</a>.</li>
-</ul>
-<ol start="4" style="list-style-type: decimal">
-<li><a href="iRL.html#iRL">Inverse RL</a> explores MDP solutions with <strong>unknown rewards</strong>, replacing them with estimates from expert demonstration; orthogonal to dynamics estimation methods.</li>
-</ol>
+<li>Reducing variance: baseline theorem <a href="polMethods.html#thm:pgBaseline">3.2</a>.
+<ul>
+<li>The best baseline is state-value function; so good policy methods are contingent upon value method models.</li>
+</ul></li>
+<li>Using off-policy data: relative policy difference theorem <a href="polMethods.html#thm:PDL">3.3</a>.
+<ul>
+<li><strong>Surrogate policy loss</strong> corrects for off-policy data contingent upon policy proximity <a href="polMethods.html#def:surrogatePG">3.7</a>. Natural extension to PPO-Clip algorithm <a href="polMethods.html#def:ppoClip">3.8</a>.</li>
+<li><strong>V-trace</strong> corrects the observed values by (clipped) importance sampling; this corrects both value and policy losses.</li>
+</ul></li>
+</ul></li>
+<li><a href="iRL.html#iRL">Inverse RL</a> explores MDP solutions with <strong>unknown rewards</strong>, replacing them with estimates from expert demonstration; orthogonal to dynamics estimation methods.
 <ul>
 <li>Main problem: identifiably problem of deducing rewards from expert policies; a partial answer is the reward shaping theorem <a href="iRL.html#thm:rewardShapingTheorem">4.1</a>.</li>
 <li>Foundational result is <a href="iRL.html#maxEntropyiRL">max-entropy IRL</a> which has clean closed-form optimization.</li>
-</ul>
-<ol start="5" style="list-style-type: decimal">
+</ul></li>
 <li><a href="rlLLMs.html#rlLLMs">RL for LLMs</a>: eliciting rewards from preferences; direct preference optimization.</li>
+<li><a href="exploration.html#exploration">Exploration and bandits</a>: regret framework for analyzing decision optimality. Single-state memoryless MDP serves as the foundational block for MDP exploration methods.
+<ul>
+<li>Lai-Robbins lower bound <a href="exploration.html#thm:regretLowerBound">5.1</a>: fundamental lower bound on how much trial and error are needed.</li>
+<li>Upper-confidence bound bandits dominate lower-confidence bound ones. <strong>Be an optimist in life</strong>!</li>
+<li>UCB regret bound <a href="exploration.html#thm:ucbRegret">5.3</a>.</li>
+<li>Given priors (in a Bayesian setting), use Thompson sampling.</li>
+</ul></li>
 </ol>
-<p>Cool theorems:</p>
+<p>Salient themes:</p>
+<ol style="list-style-type: decimal">
+<li>Methodological approach: exact solutions in strong models (finite MDPs with known dynamics). RL consists of a diverse toolkit for tackling relaxed assumptions.
+<ul>
+<li><em>Large state-action space</em>: use deep model function approximation.</li>
+<li><em>Unknown dynamics</em>: use sampling; interpolate between temporal-difference and monte-carlo.</li>
+<li><em>Unknown rewards</em>: reward modeling (e.g. using max-entropy).</li>
+<li><em>Exploration</em>: entropy bonus, bandit-inspired optimism.</li>
+</ul></li>
+<li>Two foundational cornerstones in RL: <strong>(action-)value function</strong> and <strong>policy</strong>. The first is contingent upon DP reductions based on Markov assumptions, giving models more “bite” when assumptions hold.
+<ul>
+<li>Accurate action-value function implies good policy: Q-learning.</li>
+<li>Policy gradient training can benefit from good value-function estimates.</li>
+</ul></li>
+<li>Applicable themes in life:
+<ul>
+<li>Policy-gradient theorem: weighing individual actions by rollout rewards is unbiased despite seeming greedy.
+<ul>
+<li>Improve by bootstrapping or baseline.</li>
+<li>Correct for off-policy by importance sampling.</li>
+</ul></li>
+<li>Be an optimist under uncertainty! Better to be battered by and learn from reality than missing out.</li>
+</ul></li>
+</ol>
+</div>
+<div id="cool-theorems" class="section level2 unnumbered hasAnchor">
+<h2>Cool theorems<a href="index.html#cool-theorems" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ul>
 <li><a href="mdp.html#mdp">Markov Decision Processes</a>: contraction properties <a href="mdp.html#thm:contraction">1.3</a>, optimality of <span class="math inline">\(Q^*\)</span>-greedy policies <a href="mdp.html#thm:greedyPolicyOptimal">1.2</a>. Convergence bound of VI and PI.</li>
 <li><a href="sampMDP.html#sampMDP">Sample-based MDP solutions</a>: NA, just definition.</li>
@@ -215,8 +256,13 @@ div.csl-indent {
 <li>Proof theme: Boltzmann methods, and interchange between single and nested optimizations.</li>
 </ul></li>
 <li><a href="rlLLMs.html#rlLLMs">RL for LLMs</a>: <a href="rlLLMs.html#dpo">DPO reduction</a>; variational characterization of KL and using analytic solutions to inner optimizations.</li>
+<li><a href="exploration.html#exploration">Bandits and exploration</a>: Lai-Robbins lower bound <a href="exploration.html#thm:regretLowerBound">5.1</a> and UCB regret bound <a href="exploration.html#thm:ucbRegret">5.3</a>.
+<ul>
+<li>Proof theme: split event into “typical” and “atypical” subevents according to likelihood ratio; typical subevents provide direct bound, and bound atypical subevents using Radon-Nikodym derivative &amp; KL properties.</li>
+</ul></li>
 </ul>
 
+</div>
 </div>
             </section>
 

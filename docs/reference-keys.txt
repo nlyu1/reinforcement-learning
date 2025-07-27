@@ -42,6 +42,7 @@ thm:relPerfBound
 cor:unlabeled-div-14
 def:surrogatePG
 def:ppoClip
+def:vTraceAlgo
 def:imlSetup
 def:demoiml
 def:unlabeled-div-15
@@ -66,10 +67,8 @@ def:ucb
 thm:ucbRegret
 def:probMatching
 def:thompsonSamp
-def:unlabeled-div-20
 mdp
 sampMDP
 polMethods
 iRL
 rlLLMs
-exploration

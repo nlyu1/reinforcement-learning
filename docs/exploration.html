@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>6 Exploration | Reinforcement Learning</title>
-  <meta name="description" content="6 Exploration | Reinforcement Learning" />
-  <meta name="generator" content="bookdown 0.39 and GitBook 2.6.7" />
+  <title>Exploration | Reinforcement Learning</title>
+  <meta name="description" content="Exploration | Reinforcement Learning" />
+  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="6 Exploration | Reinforcement Learning" />
+  <meta property="og:title" content="Exploration | Reinforcement Learning" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="6 Exploration | Reinforcement Learning" />
+  <meta name="twitter:title" content="Exploration | Reinforcement Learning" />
   
   
   
@@ -23,7 +23,7 @@
 <meta name="author" content="Nicholas Lyu" />
 
 
-<meta name="date" content="2025-07-25" />
+<meta name="date" content="2025-07-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -64,7 +64,6 @@
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
-  margin-bottom: 0em;
 }
 .hanging div.csl-entry {
   margin-left:2em;
@@ -95,7 +94,11 @@ div.csl-indent {
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#chapter-highlights"><i class="fa fa-check"></i>Chapter highlights</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#cool-theorems"><i class="fa fa-check"></i>Cool theorems</a></li>
+</ul></li>
 <li class="chapter" data-level="1" data-path="mdp.html"><a href="mdp.html"><i class="fa fa-check"></i><b>1</b> Markov Decision Processes</a>
 <ul>
 <li class="chapter" data-level="" data-path="mdp.html"><a href="mdp.html#MDP"><i class="fa fa-check"></i>Preliminaries</a></li>
@@ -118,6 +121,7 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="polMethods.html"><a href="polMethods.html#advEstimate"><i class="fa fa-check"></i>Generalized Advantage Estimation</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="polMethods.html"><a href="polMethods.html#ppo"><i class="fa fa-check"></i>Off-policy, conservative updates</a></li>
+<li class="chapter" data-level="" data-path="polMethods.html"><a href="polMethods.html#vTrace"><i class="fa fa-check"></i>V-trace</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="iRL.html"><a href="iRL.html"><i class="fa fa-check"></i><b>4</b> Inverse RL</a>
 <ul>
@@ -131,13 +135,12 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="rlLLMs.html"><a href="rlLLMs.html#rewardPreference"><i class="fa fa-check"></i>Preference-based reward modeling</a></li>
 <li class="chapter" data-level="" data-path="rlLLMs.html"><a href="rlLLMs.html#dpo"><i class="fa fa-check"></i>Direct Preference Optimization</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="exploration.html"><a href="exploration.html"><i class="fa fa-check"></i><b>6</b> Exploration</a>
+<li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html"><i class="fa fa-check"></i>Exploration</a>
 <ul>
 <li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html#bandits"><i class="fa fa-check"></i>Multi-arm bandit</a></li>
 <li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html#lrLB"><i class="fa fa-check"></i>Lai-Robins lower bound</a></li>
 <li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html#ucb"><i class="fa fa-check"></i>Upper confidence bound method</a></li>
 <li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html#bayesianBandit"><i class="fa fa-check"></i>Bayesian bandit</a></li>
-<li class="chapter" data-level="" data-path="exploration.html"><a href="exploration.html#mdpExploration"><i class="fa fa-check"></i>Exploration in MDPs</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="bibliography.html"><a href="bibliography.html"><i class="fa fa-check"></i>Bibliography</a></li>
 </ul>
@@ -157,17 +160,17 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="exploration" class="section level1 hasAnchor" number="6">
-<h1><span class="header-section-number">6</span> Exploration<a href="exploration.html#exploration" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="exploration" class="section level1 unnumbered hasAnchor">
+<h1>Exploration<a href="exploration.html#exploration" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <ol style="list-style-type: decimal">
 <li>Multi-armed bandit (MAB) = MDP with memoryless environment and one state. It provides a reduced case for analyzing exploration v. exploitation.
 <ul>
 <li>Generalization to <span class="math inline">\(|\mathcal S|&gt;1\)</span> states = <strong>contextual bandit</strong> = MDP with memoryless environment.</li>
 </ul></li>
-<li>Lai-Robbins lower bound (theorem <a href="exploration.html#thm:regretLowerBound">6.1</a>): regret grows at least as <span class="math inline">\(\log t\)</span>. <span style="color:blue">This is an exemplary proof using deviations theory.</span></li>
+<li>Lai-Robbins lower bound (theorem <a href="exploration.html#thm:regretLowerBound">5.1</a>): regret grows at least as <span class="math inline">\(\log t\)</span>. <span style="color:blue">This is an exemplary proof using deviations theory.</span></li>
 <li>Optimism dominates pessimism in face of uncertainty:
 <ul>
-<li>UCB algorithm and regret bound @(thm:ucbRegret).</li>
+<li>UCB algorithm and regret bound <a href="exploration.html#thm:ucbRegret">5.3</a>.</li>
 <li>LCB algorithm is inherently greedy.</li>
 </ul></li>
 <li><a href="exploration.html#bayesianBandit">Bayesian setup</a>: bayesian regret and Thompson sampling, which implements probability matching.</li>
@@ -175,10 +178,10 @@ div.csl-indent {
 <div id="bandits" class="section level2 unnumbered hasAnchor">
 <h2>Multi-arm bandit<a href="exploration.html#bandits" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="definition">
-<p><span id="def:multiArmBandit" class="definition"><strong>Definition 6.1  (multiarmed bandits) </strong></span>A multi-armed bandit consists of a known set of <span class="math inline">\(m\)</span> actions, <span class="math inline">\(\mathcal R^a(r)=\mathbb P(r\mid a)\)</span> an unknown yet stationary distribution over rewards. At each step, the agent selects action <span class="math inline">\(a_t\in \mathcal A\)</span> and the environment generates a reward. The goal is the maximize the cumulative reward <span class="math inline">\(\sum_{\tau=1}^t r_\tau\)</span>.</p>
+<p><span id="def:multiArmBandit" class="definition"><strong>Definition 5.6  (multiarmed bandits) </strong></span>A multi-armed bandit consists of a known set of <span class="math inline">\(m\)</span> actions, <span class="math inline">\(\mathcal R^a(r)=\mathbb P(r\mid a)\)</span> an unknown yet stationary distribution over rewards. At each step, the agent selects action <span class="math inline">\(a_t\in \mathcal A\)</span> and the environment generates a reward. The goal is the maximize the cumulative reward <span class="math inline">\(\sum_{\tau=1}^t r_\tau\)</span>.</p>
 </div>
 <div class="definition">
-<p><span id="def:unlabeled-div-18" class="definition"><strong>Definition 6.2  (regret) </strong></span>Consider the following definitions; note that recall is a statistical average definition, and that minimizing regret = maximizing expected cumulative reward.</p>
+<p><span id="def:unlabeled-div-18" class="definition"><strong>Definition 5.7  (regret) </strong></span>Consider the following definitions; note that recall is a statistical average definition, and that minimizing regret = maximizing expected cumulative reward.</p>
 <ul>
 <li><strong>Action-value</strong> <span class="math inline">\(Q(a)=\mathbb E[r\mid a]\)</span> denotes the mean reward for action <span class="math inline">\(a\)</span>.</li>
 <li><strong>Optimal value</strong> <span class="math inline">\(V^* = Q(a^*) = \max_a Q(a)\)</span></li>
@@ -215,7 +218,7 @@ P(E_t) = P(E_t \cap \overline{C_t}) + P(E_t \cap C_t)
 </ol>
 </div>
 <div class="theorem">
-<p><span id="thm:regretLowerBound" class="theorem"><strong>Theorem 6.1  (Lai-Robbins lower bound) </strong></span>For any algorithm such that the number of suboptimal pulls is <span class="math inline">\(o(t^{\eta\in (0, 1)})\)</span>, we have a logarithmic lower bound on regret:
+<p><span id="thm:regretLowerBound" class="theorem"><strong>Theorem 5.1  (Lai-Robbins lower bound) </strong></span>For any algorithm such that the number of suboptimal pulls is <span class="math inline">\(o(t^{\eta\in (0, 1)})\)</span>, we have a logarithmic lower bound on regret:
 <span class="math display">\[\begin{align}
     L_t \geq (1-\eta) \log t \sum_{a\neq a^*} \dfrac{\Delta_a}{D(\mathcal R^a \| \mathcal R^{a^*})}
 \end{align}\]</span></p>
@@ -289,7 +292,7 @@ Take <span class="math inline">\(\epsilon\to 0\)</span>; also note that by chain
 <li>In general, the decay schedule of <span class="math inline">\(\epsilon\)</span> is problem-dependent to achieve sublinear regret.</li>
 </ul>
 <div class="theorem">
-<p><span id="thm:hoeffding" class="theorem"><strong>Theorem 6.2  (Hoeffding's inequality) </strong></span>Given i.i.d. random variables <span class="math inline">\((X_j)\in [0, 1]\)</span> and let <span class="math inline">\(\bar X_n\)</span> be the sample mean, then
+<p><span id="thm:hoeffding" class="theorem"><strong>Theorem 5.2  (Hoeffding's inequality) </strong></span>Given i.i.d. random variables <span class="math inline">\((X_j)\in [0, 1]\)</span> and let <span class="math inline">\(\bar X_n\)</span> be the sample mean, then
 <span class="math display">\[
     P\left[\mathbb E[X] &gt; \bar X_n + u\right] \leq \exp(-2nu^2)
 \]</span>
@@ -299,7 +302,7 @@ Rearrange and use symmetry to obtain a bound on the absolute value difference
 \]</span></p>
 </div>
 <div class="definition">
-<p><span id="def:ucb" class="definition"><strong>Definition 6.3  (UCB algorithm) </strong></span>Given a MAB (multi-arm bandit) with <span class="math inline">\(m\)</span> arms:</p>
+<p><span id="def:ucb" class="definition"><strong>Definition 5.8  (UCB algorithm) </strong></span>Given a MAB (multi-arm bandit) with <span class="math inline">\(m\)</span> arms:</p>
 <ol style="list-style-type: decimal">
 <li>Sample once from each arm.</li>
 <li>Let <span class="math inline">\(N_a\)</span> denote the number of times arm <span class="math inline">\(a\)</span> has been pulled, and <span class="math inline">\(\hat Q(a)\)</span> be the sample mean reward of arm <span class="math inline">\(a\)</span>, choose
@@ -309,7 +312,7 @@ a_t = \operatorname*{arg\,max}_{a} \hat Q(a) + \sqrt{\dfrac{\log(2/\delta_t)}{2n
 </ol>
 </div>
 <div class="theorem">
-<p><span id="thm:ucbRegret" class="theorem"><strong>Theorem 6.3  (UCB regret bound) </strong></span>Using the UCB algorithm as in <a href="exploration.html#def:ucb">6.3</a>, the regret is
+<p><span id="thm:ucbRegret" class="theorem"><strong>Theorem 5.3  (UCB regret bound) </strong></span>Using the UCB algorithm as in <a href="exploration.html#def:ucb">5.8</a>, the regret is
 <span class="math display">\[
     L_t = \sum_{\Delta_a \neq 0} \Delta_a \mathbb E[n_a(t)] \leq \Omega\left(
         \log t \sum_{\Delta_a\neq 0} \dfrac 1 {\Delta_a}
@@ -366,7 +369,7 @@ Combining the bounds and choose <span class="math inline">\(\delta_t = 1/t^2\)</
     \right]
 \]</span></p>
 <div class="definition">
-<p><span id="def:probMatching" class="definition"><strong>Definition 6.4  (probability matching) </strong></span>In a Bayes setting, a probability matching algorithm selects action <span class="math inline">\(a\)</span> according to the probability that <span class="math inline">\(a\)</span> is the optimal action, given the current history
+<p><span id="def:probMatching" class="definition"><strong>Definition 5.9  (probability matching) </strong></span>In a Bayes setting, a probability matching algorithm selects action <span class="math inline">\(a\)</span> according to the probability that <span class="math inline">\(a\)</span> is the optimal action, given the current history
 <span class="math display">\[
     \pi(a\mid h_t) = P\left[
         Q(a) &gt; Q(a&#39;\neq a) \mid h_t
@@ -378,7 +381,7 @@ Combining the bounds and choose <span class="math inline">\(\delta_t = 1/t^2\)</
 </ol>
 </div>
 <div class="definition">
-<p><span id="def:thompsonSamp" class="definition"><strong>Definition 6.5  (Thompson sampling) </strong></span>Given priors <span class="math inline">\(p(\mathcal R_a)\)</span>, for each iteration repeat:</p>
+<p><span id="def:thompsonSamp" class="definition"><strong>Definition 5.10  (Thompson sampling) </strong></span>Given priors <span class="math inline">\(p(\mathcal R_a)\)</span>, for each iteration repeat:</p>
 <ol style="list-style-type: decimal">
 <li>For each arm, sample a reward <strong>distribution parameter</strong> from the parameter posterior <span class="math inline">\(\hat \theta_a \sim \left(p(\mathcal R_a)\mid h_t\right)\)</span>.</li>
 <li>Compute the sampled distribution’s mean <span class="math inline">\(Q(a) = \mathbb E_{\theta_a} \mathcal R_a(\theta_a)\)</span>.</li>
@@ -387,17 +390,6 @@ Combining the bounds and choose <span class="math inline">\(\delta_t = 1/t^2\)</
 </ol>
 </div>
 <p>Note that probability matching is inherently optimistic in case of uncertainty. Also note that we sample a reward distribution parameter and analytically compute the mean reward, given that parameter.</p>
-</div>
-<div id="mdpExploration" class="section level2 unnumbered hasAnchor">
-<h2>Exploration in MDPs<a href="exploration.html#mdpExploration" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="definition">
-<p><span id="def:unlabeled-div-20" class="definition"><strong>Definition 6.6  (PAC control) </strong></span>Given a MDP, a control algorithm is probably approximately correct (PAC) if on each step, the chosen action <span class="math inline">\(a\)</span>:</p>
-<ul>
-<li>is <span class="math inline">\(\epsilon\)</span>-optimal: <span class="math inline">\(Q(s, a)\geq Q(s, a^*) - \epsilon\)</span>.</li>
-<li>with probability at least <span class="math inline">\(1-\delta\)</span></li>
-</ul>
-<p>on all but <span class="math inline">\(\mathrm{poly}(\mathcal|A|, \epsilon, \delta, \dots)\)</span> number of steps.</p>
-</div>
 
 </div>
 </div>
