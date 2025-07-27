@@ -14,10 +14,11 @@ In this section, we relax the assumption that the reward model is known. The tas
 3. Classical approach \@ref(def:classicalIRL) elucidates **adversarial** iteration between: 
     - Maximizing reward gap between expert reward and that of the current policy. 
     - Maximizing policy reward w.r.t. estimate. 
-4. Another approach to the reward identifiably problem is to use the principle of maximum entropy (algorithm \@ref(def:maxEntIRLAlg)). Assuming knowledge of the dynamics model $P$, every policy $\pi_\theta$ induces a distribution $\rho^{\pi_\theta}$. Each reward model $r_\phi$ induces an optimal policy $\pi^*(r_\phi)$, which in turn induces an optimal distribution $\rho^*_{r_\phi}$ over trajectories.
+4. Another approach to the reward identifiably problem is to use the principle of maximum entropy (algorithm \@ref(def:maxEntIRLAlg)). Assuming knowledge of the dynamics model $P$, every policy $\pi_\theta$ induces a distribution $\rho^{\pi_\theta}$. Each reward model $r_\phi$ induces a maximal-entropy policy $\pi^*(r_\phi)$ compatible with empirical reward (turns out to be Boltzmann), which in turn induces an optimal distribution $\rho^*_{r_\phi}$ over trajectories.
     a. <span style="color:blue"> We look for a reward model **whose entropy-maximizing $\pi_\phi$ induces a trajectory distribution** satisfying (theorem \@ref(thm:maxEntReduction)): 
         - Reward-compatible with empirical expert trajectory. 
         - Has maximal entropy across $r_\phi$. </span>
+        - Note that there're two layers of max-entropy (across distributions, constrained; and across reward functions). 
     b. We break this optimization into optimizing $r_\phi$ over (maximum entropy given $r_\phi$, and reward-compatible with empirical data); the inner optimizer is a Boltzmann distribution. 
     c. It turns out that this optimization is equivalent to looking for a reward model under whose Boltzmann distribution the empirical expert trajectories are MLE: **key theorem \@ref(thm:maxEntReduction)** 
         - Interestingly, the gradient looks exactly like maximizing the separation between the empirically expected reward and the expected reward under the Boltzmann distribution, echoing the classical IRL construction \@ref(def:classicalIRL). 
@@ -80,7 +81,6 @@ Under this transformation, the value functions transform as
 
 <details>
 <summary>Sufficiency: pick a transformation affecting $V^*\mapsto V^*+\pi$ which is independent of the policy</summary>
-</details>
 
 Let $M, M'$ denote MDPs under $r, r'=r+F$ respectively. Recall for $M^*$ the Bellman optimality equations: 
 \[ 
@@ -107,6 +107,7 @@ Then any optimal policy for $M$ satisfying
     \pi^* = \argmax{\pi} V^*_M(s_0) =  \argmax{\pi} V^*_M(s_0) - \Phi(s_0) = \argmax{\pi} V^*_{M'}(s_0) - \Phi(s_0)
 \] 
 is also optimal for $M'$. 
+</details>
 
 ## Classical inverse RL {#iRLClassical -}
 
@@ -177,9 +178,9 @@ subject to the following constraints:
 :::
 
 :::{.theorem #maxEntReduction name="max-entropy reduction"}
-Let $B_{r_\phi: \tau \mapsto \R, \lambda\in R}$ denote the Boltzmann distribution 
+Let $B_{r_\phi, \lambda}$ denote the Boltzmann distribution 
 \[ 
-    B_{r_\phi, \lambda} = \df{e^{\lambda \, r_\phi(\tau)}}{Z(r_\phi, \lambda)}, \quad Z(r_\phi, \lambda) = \sum_\tau e^{\lambda r_\phi(\tau)}
+    B_{r_\phi, \lambda} = \df{e^{\lambda \, r_\phi(\tau)}}{Z(r_\phi, \lambda)}, \quad Z(r_\phi, \lambda) = \sum_\tau e^{\lambda r_\phi(\tau)}, \quad r_\phi(\tau)\in \R, \quad \lambda \in \R
 \] 
 Further assume that $r_\phi$ has <u>linear degree of freedom</u> i.e. 
 \[

@@ -230,7 +230,7 @@ More steps imply (closer to MC) + (higher variance) + (lower bias). In either ca
 It can be proven inductively that 
 \begin{align}
     \hat A^{(k)}_t 
-    = \sum_{j=0}^{k-1} \gamma^j + r_{t+j} \gamma^k \hat V(s_{t+k}) - \hat V(s_t)
+    = \sum_{j=0}^{k-1} \gamma^j r_{t+j} \gamma^k \hat V(s_{t+k}) - \hat V(s_t)
 \end{align}
 
 :::{.definition #gae name="Generalized Advantage Estimator"}
@@ -385,4 +385,46 @@ Choose hyperparameter $\epsilon<1$ (usually $0.1-0.3$); same as algorithm \@ref(
         r^\theta_{jt} A_{jt}, \mrm{clip}(r^\theta_{jt}, 1\pm \epsilon) A_{jt}
     \right], \quad r^\theta_{jt} = \df{\pi_{\theta}(a_{jt}\mid s_{jt})}{\pi_\phi(a_{jt}\mid s_{jt})}
 \] 
+:::
+
+## V-trace {#vTrace -}
+
+In canonical policy-gradient with baselines, we're training two models: 
+
+1. A policy model $\pi_\theta$; here, we can use the surrogate loss and clipping to ensure unbiased training under off-policy data. 
+2. A value-model $V_\phi$; we don't know how to train this effectively using off-policy data just yet. 
+
+The [IMPALA paper](@espeholt2018impala,) proposed directly applying importance sampling correction to the observed values and rewards, then training the policy in an on-policy manner on these corrected trajectories. Recall that given reference policy $\pi$, we have 
+
+\begin{align}
+    J(\pi') 
+    &= \sum_{t=0}^{H-1} \EEV{a\sim \pi'}{s\sim d^{\pi'}}\gamma^t \left[r(a_t, s_t)\right] \\ 
+    &= \sum_{t=0}^{H-1} \EEV{a\sim \pi}{s\sim d^{\pi'}}\left[\df{\pi'(a_t\mid s_t)}{\pi(a_t\mid s_t)}r(a_t, s_t)\right] \\ 
+\end{align}
+
+When $\pi\approx \pi'$, the state distribution $d^\pi, d^{\pi'}$ are close, so we can train from off-policy trajectory by viewing as if we've observed importance-sampling corrected rewards, <u>so long as policies are similar</u>. Also recall that closer rollouts are subject to less deviation than further ones. 
+
+:::{.definition #vTraceAlgo name="V-trace algorithm"}
+Given a value function $V$ and hyperparameters $\bar \rho, \bar c$, define the $n$-step $V$-trace target for the current approximation as 
+\begin{align}
+    v_s 
+    &= V(s) + \sum_{t=s}^{s+n-1} \gamma^{t-s} \left(\prod_{i=s}^{t-1}\right) \delta_t ,\quad c_t = \min \left[\bar c, \df{\pi'(a_t\mid x_t)}{\pi(a_t\mid x_t)}\right]  \\ 
+    \delta_t &= \rho_t \left[r_t + \gamma V(x_{t+1}) - V(x_t)\right], \quad \rho_t = \min \left[\bar \rho, \df{\pi'(a_t\mid x_t)}{\pi(a_t\mid x_t)}\right] 
+\end{align}
+Note that the trajectory $(a_t, s_t)$ is collected using reference policy $\pi$, while we're approximating a value function for $\pi'$. Unpacking the notation:
+
+1. When $\pi=\pi'$, $\delta_t$ is just the one-step temporal difference, and $v_s$ is the n-step Bellman backup target. 
+2. The term $\rho_t$ introduces a clipped correction to the TD correction, preventing large variance at the expense of biasing the $v$-estimate towards the reference $\pi$. 
+    - It can be shown that the value function corresponding to the clipped TD-correction is some interpolation between $\pi$ and $\pi'$. 
+3. The term $c_t$ weighs the different TD corrections, down-weighing later $\delta_t$'s. 
+
+The final V-trace algorithm proceeds as follows: 
+
+1. Collect trajectories using reference policy $\pi$, recording $(a_t, s_t, \pi(a_t\mid s_t), r_t)$. 
+2. When updating $\pi'$ and its value estimate $V$, first update $V$ according to V-trace targets $v$. 
+3. Compute the corrected advantage $A_s=r_s + \gamma v_{s+1} - V(x_s)$ and update policy parameters in direction of the gradient
+\[ 
+    \rho_s \nabla \log \pi(a_s\mid x_s)A_s 
+\] 
+Note that the (clipped) importance sampling is applied here as well. 
 :::

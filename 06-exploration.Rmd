@@ -1,10 +1,10 @@
-# Exploration
+# Exploration {#exploration -}
 
 1. Multi-armed bandit (MAB) = MDP with memoryless environment and one state. It provides a reduced case for analyzing exploration v. exploitation. 
     - Generalization to $|\mca S|>1$ states = **contextual bandit** = MDP with memoryless environment. 
 2. Lai-Robbins lower bound (theorem \@ref(thm:regretLowerBound)): regret grows at least as $\log t$. <span style="color:blue">This is an exemplary proof using deviations theory.</span>
 3. Optimism dominates pessimism in face of uncertainty: 
-    - UCB algorithm and regret bound \@(thm:ucbRegret). 
+    - UCB algorithm and regret bound \@ref(thm:ucbRegret). 
     - LCB algorithm is inherently greedy. 
 4. [Bayesian setup](#bayesianBandit): bayesian regret and Thompson sampling, which implements probability matching.  
 
@@ -223,14 +223,3 @@ Given priors $p(\mca R_a)$, for each iteration repeat:
 :::
 
 Note that probability matching is inherently optimistic in case of uncertainty. Also note that we sample a reward distribution parameter and analytically compute the mean reward, given that parameter. 
-
-## Exploration in MDPs {#mdpExploration -}
-
-:::{.definition name="PAC control"}
-Given a MDP, a control algorithm is probably approximately correct (PAC) if on each step, the chosen action $a$: 
-
-- is $\epsilon$-optimal: $Q(s, a)\geq Q(s, a^*) - \epsilon$. 
-- with probability at least $1-\delta$ 
-
-on all but $\mrm{poly}(\mca |A|, \epsilon, \delta, \dots)$ number of steps. 
-:::
